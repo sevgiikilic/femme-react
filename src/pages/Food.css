@@ -1,0 +1,61 @@
+.food-list-card { padding: 0; overflow: hidden; }
+.food-item {
+  display: grid;
+  grid-template-columns: 36px 1fr auto;
+  align-items: center; gap: 12px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--line);
+}
+.food-item:last-child { border-bottom: none; }
+
+.food-pref {
+  width: 30px; height: 30px;
+  border: 2px solid var(--ink);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--f-mono); font-size: 13px; font-weight: 700;
+  flex-shrink: 0;
+}
+.food-pref-love    { background: var(--accent); color: var(--paper); }
+.food-pref-skip    { background: var(--ink); color: var(--paper); }
+.food-pref-react   { background: var(--jazz-orange); color: var(--paper); }
+.food-pref-neutral { background: var(--paper-2); color: var(--ink-faint); }
+
+.food-name { font-family: var(--f-body); font-size: 14px; color: var(--ink); font-weight: 500; }
+.food-meta {
+  font-family: var(--f-mono); font-size: 10px; color: var(--ink-faint);
+  letter-spacing: 0.08em; text-transform: uppercase; margin-top: 2px;
+}
+
+.issue-tag {
+  display: inline-block;
+  background: var(--paper-2);
+  border: 1px solid var(--ink);
+  font-family: var(--f-mono); font-size: 9px;
+  padding: 2px 6px; margin-left: 4px; cursor: pointer;
+  color: var(--jazz-orange);
+}
+.issue-tag:hover { background: var(--jazz-orange); color: var(--paper); }
+
+.food-actions {
+  display: flex; align-items: center; gap: 6px; flex-shrink: 0;
+}
+.select-sm {
+  font-size: 10px; padding: 4px 20px 4px 6px; width: auto;
+  border: 1px solid var(--ink); background: var(--paper);
+  color: var(--ink); font-family: var(--f-mono);
+}
+
+.rec-item {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 7px 0; border-bottom: 1px dotted var(--line);
+  font-family: var(--f-body); font-size: 13px; color: var(--ink); line-height: 1.4;
+}
+.rec-item:last-child { border-bottom: none; }
+.rec-icon {
+  font-family: var(--f-mono); font-size: 12px; font-weight: 700;
+  color: var(--accent); flex-shrink: 0; width: 16px; margin-top: 1px;
+}
+.empty-msg {
+  color: var(--ink-faint); font-family: var(--f-mono); font-size: 11px;
+  letter-spacing: 0.08em; padding: 20px 16px; text-transform: uppercase;
+}

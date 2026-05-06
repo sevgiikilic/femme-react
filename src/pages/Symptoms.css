@@ -1,0 +1,86 @@
+.chip-cat {
+  font-family: var(--f-mono);
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.22em;
+  color: var(--paper);
+  background: var(--ink);
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 10px;
+  margin: 20px 0 10px;
+}
+.chip-cat-icon {
+  font-family: var(--f-pixel);
+  font-size: 16px; line-height: 1;
+  color: var(--gold);
+}
+
+.chip-group {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin-bottom: 4px;
+}
+.chip {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 13px;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition: all .1s;
+  box-shadow: 2px 2px 0 var(--line);
+}
+.chip:hover { background: var(--paper-2); box-shadow: 3px 3px 0 var(--ink); transform: translate(-1px,-1px); }
+.chip.selected {
+  background: var(--accent);
+  border-color: var(--ink);
+  color: var(--paper);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+[data-theme="space"] .chip.selected { color: #fff; }
+.chip.chip-custom { border-style: dashed; }
+
+.sym-add-row {
+  display: flex; gap: 10px; margin-top: 8px;
+}
+.sym-add-row .input { flex: 1; }
+
+.scale-row {
+  display: flex; gap: 8px; margin-top: 10px;
+}
+.scale-btn {
+  flex: 1;
+  background: var(--paper-2);
+  border: 2px solid var(--ink);
+  color: var(--ink);
+  font-family: var(--f-display);
+  font-size: 32px; line-height: 1;
+  padding: 14px 0;
+  cursor: pointer;
+  transition: all .1s;
+  box-shadow: 3px 3px 0 var(--line);
+}
+.scale-btn:hover { background: var(--paper); transform: translate(-1px,-1px); box-shadow: 4px 4px 0 var(--ink); }
+.scale-btn.selected {
+  background: var(--accent);
+  color: var(--paper);
+  border-color: var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+[data-theme="space"] .scale-btn.selected { color: #fff; }
+
+.textarea {
+  width: 100%;
+  min-height: 100px;
+  background: var(--bg);
+  border: 2px solid var(--ink);
+  color: var(--ink);
+  padding: 12px 14px;
+  font-family: var(--f-body);
+  font-size: 14px;
+  line-height: 1.6;
+  resize: vertical;
+  box-shadow: 3px 3px 0 var(--line);
+  margin-top: 10px;
+}
+.textarea:focus { border-color: var(--accent); box-shadow: 3px 3px 0 var(--accent); outline: none; }
+.textarea::placeholder { color: var(--ink-faint); }

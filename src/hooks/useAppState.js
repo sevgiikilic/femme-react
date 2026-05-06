@@ -15,6 +15,7 @@ const DEFAULT = {
   workouts: [],
   customSymptoms: [],
   chat: [],
+  aiUrl: '',
 };
 
 function load() {

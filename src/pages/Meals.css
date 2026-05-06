@@ -1,0 +1,46 @@
+.meal-day {
+  background: var(--paper);
+  border: 3px solid var(--ink);
+  box-shadow: 5px 5px 0 var(--ink);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.meal-day-head {
+  background: var(--ink);
+  color: var(--paper);
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 16px;
+}
+.meal-day-date {
+  font-family: var(--f-mono); font-size: 11px; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase;
+}
+.meal-day-cal {
+  font-family: var(--f-mono); font-size: 11px; font-weight: 700;
+  color: var(--gold); letter-spacing: 0.14em;
+}
+.meal-item {
+  display: grid;
+  grid-template-columns: 100px 1fr auto auto;
+  align-items: center; gap: 12px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--line);
+}
+.meal-item:last-child { border-bottom: none; }
+.meal-type {
+  font-family: var(--f-mono); font-size: 9px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.18em;
+  color: var(--ink-faint);
+}
+.meal-desc {
+  font-family: var(--f-body); font-size: 14px; color: var(--ink);
+}
+.meal-cal {
+  font-family: var(--f-display); font-size: 20px;
+  color: var(--accent); white-space: nowrap;
+}
+.empty-msg {
+  text-align: center; color: var(--ink-faint);
+  font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.08em;
+  padding: 32px; text-transform: uppercase;
+}

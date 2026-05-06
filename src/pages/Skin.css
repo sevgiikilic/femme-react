@@ -1,0 +1,57 @@
+.chip-group {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  padding: 4px 0;
+}
+.chip {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 13px;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition: all .1s;
+  box-shadow: 2px 2px 0 var(--line);
+}
+.chip:hover { background: var(--paper-2); box-shadow: 3px 3px 0 var(--ink); transform: translate(-1px,-1px); }
+.chip.selected { background: var(--accent); border-color: var(--ink); color: var(--paper); box-shadow: 3px 3px 0 var(--ink); }
+[data-theme="space"] .chip.selected { color: #fff; }
+
+.search-hint {
+  font-family: var(--f-mono); font-size: 10px; color: var(--accent);
+  letter-spacing: 0.1em; margin-top: 4px; text-transform: uppercase;
+}
+.ai-note {
+  font-family: var(--f-mono); font-size: 10px; color: var(--ink-soft);
+  letter-spacing: 0.08em; margin-top: 12px;
+}
+
+.routine-step {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 8px 0; border-bottom: 1px dotted var(--line);
+}
+.routine-step:last-child { border-bottom: none; }
+.routine-dot {
+  font-family: var(--f-mono); font-size: 16px; font-weight: 700;
+  color: var(--accent); width: 14px; flex-shrink: 0; margin-top: 1px;
+}
+.routine-type {
+  font-family: var(--f-mono); font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.16em; color: var(--ink-faint);
+  margin-bottom: 2px;
+}
+.routine-prod { font-family: var(--f-body); font-size: 13px; color: var(--ink); }
+.routine-empty { font-family: var(--f-body); font-size: 12px; color: var(--ink-faint); font-style: italic; }
+.skin-note {
+  font-family: var(--f-body); font-size: 13px; color: var(--ink-soft);
+  font-style: italic; padding: 8px 0; border-bottom: 1px dashed var(--line);
+  margin-bottom: 8px;
+}
+
+.table-card { padding: 16px 24px; }
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th { font-family: var(--f-mono); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.18em; color: var(--ink-soft); padding: 8px 10px; text-align: left; border-bottom: 2px solid var(--ink); }
+.data-table td { padding: 9px 10px; font-family: var(--f-body); font-size: 13px; color: var(--ink); border-bottom: 1px solid var(--line); }
+.data-table tr:last-child td { border-bottom: none; }
+.num-cell { font-family: var(--f-mono); font-size: 11px; font-weight: 600; letter-spacing: 0.04em; }
+.empty-cell { text-align: center; color: var(--ink-faint); font-style: italic; padding: 24px; }

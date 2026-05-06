@@ -1,0 +1,42 @@
+.ins-bars {
+  display: flex; align-items: flex-end; gap: 12px;
+  height: 130px; padding: 8px 0 0;
+}
+.ins-bar {
+  flex: 1; position: relative;
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+  border: 1px solid var(--ink);
+}
+.ins-bar-empty { height: 20%; background: var(--line); border: 1px dashed var(--line); }
+.ins-bar-val { font-family: var(--f-mono); font-size: 10px; font-weight: 700; color: var(--paper); padding-top: 4px; }
+.ins-bar-label { position: absolute; bottom: -22px; font-family: var(--f-mono); font-size: 9px; font-weight: 700; color: var(--ink-faint); text-align: center; width: 100%; letter-spacing: 0.06em; text-transform: uppercase; }
+.bars { padding-bottom: 28px; }
+.ins-bars { margin-bottom: 28px; }
+
+.sym-row {
+  display: grid; grid-template-columns: 200px 1fr 48px;
+  align-items: center; gap: 12px;
+  padding: 8px 0; border-bottom: 1px solid var(--line);
+}
+.sym-row:last-child { border-bottom: none; }
+.sym-name { font-family: var(--f-body); font-size: 13px; color: var(--ink); }
+.sym-bar-wrap { height: 10px; background: var(--bg); border: 1px solid var(--line); overflow: hidden; }
+.sym-bar-fill { height: 100%; background: var(--accent); transition: width .3s; }
+.sym-count { font-family: var(--f-mono); font-size: 11px; font-weight: 700; color: var(--accent); text-align: right; }
+
+.trigger-item {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 10px 0; border-bottom: 1px dotted var(--line);
+}
+.trigger-item:last-child { border-bottom: none; }
+.trigger-icon {
+  font-family: var(--f-mono); font-size: 14px; font-weight: 700;
+  color: var(--jazz-orange); width: 20px; flex-shrink: 0;
+}
+.trigger-name { font-family: var(--f-body); font-size: 14px; color: var(--ink); font-weight: 500; }
+.trigger-issues { font-family: var(--f-mono); font-size: 10px; color: var(--ink-soft); letter-spacing: 0.06em; margin-top: 2px; }
+
+.empty-msg {
+  color: var(--ink-faint); font-family: var(--f-mono); font-size: 11px;
+  letter-spacing: 0.08em; padding: 20px 0; text-transform: uppercase;
+}

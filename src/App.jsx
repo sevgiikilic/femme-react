@@ -3,28 +3,19 @@ import { useAuth } from './hooks/useAuth';
 import { useAppState } from './hooks/useAppState';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import Symptoms from './pages/Symptoms';
+import Body from './pages/Body';
+import Meals from './pages/Meals';
+import Cycle from './pages/Cycle';
+import Food from './pages/Food';
+import Skin from './pages/Skin';
+import Fitness from './pages/Fitness';
+import Insights from './pages/Insights';
+import Chat from './pages/Chat';
+import Settings from './pages/Settings';
 import Sidebar from './components/Sidebar';
 import './styles/global.css';
 import './App.css';
-
-const THEMES = ['space', 'moon', 'vinyl'];
-
-function PlaceholderPage({ title, titleEn, eyebrow }) {
-  return (
-    <div className="page-wrap">
-      <div className="page-head">
-        <div className="page-head-left">
-          <div className="page-eyebrow">{eyebrow}</div>
-          <h1 className="page-title" data-en={titleEn}>{title}</h1>
-        </div>
-        <div className="session-tag">{eyebrow}</div>
-      </div>
-      <div className="page-coming">
-        Bu sayfa henüz taşınıyor — bir sonraki oturumda doldurulacak.
-      </div>
-    </div>
-  );
-}
 
 export default function App() {
   const auth     = useAuth();
@@ -39,16 +30,16 @@ export default function App() {
 
   const PAGES = {
     dashboard: <Dashboard appState={appState} />,
-    symptoms:  <PlaceholderPage title="Semptomlar"     titleEn="SYMPTOMS" eyebrow="Session II"   />,
-    body:      <PlaceholderPage title="Beden"          titleEn="BODY"     eyebrow="Session III"  />,
-    meals:     <PlaceholderPage title="Yemek Günlüğü"  titleEn="MEALS"    eyebrow="Session IV"   />,
-    cycle:     <PlaceholderPage title="Döngü"          titleEn="CYCLE"    eyebrow="Session V"    />,
-    food:      <PlaceholderPage title="Beslenme"       titleEn="FOOD"     eyebrow="Session VI"   />,
-    skin:      <PlaceholderPage title="Cilt"           titleEn="SKIN"     eyebrow="Session VII"  />,
-    fitness:   <PlaceholderPage title="Spor"           titleEn="FITNESS"  eyebrow="Session VIII" />,
-    insights:  <PlaceholderPage title="Öngörüler"      titleEn="INSIGHTS" eyebrow="Session IX"   />,
-    chat:      <PlaceholderPage title="Sohbet"         titleEn="CHAT"     eyebrow="Session X"    />,
-    settings:  <PlaceholderPage title="Ayarlar"        titleEn="SETTINGS" eyebrow="Session XI"   />,
+    symptoms:  <Symptoms  appState={appState} />,
+    body:      <Body      appState={appState} />,
+    meals:     <Meals     appState={appState} />,
+    cycle:     <Cycle     appState={appState} />,
+    food:      <Food      appState={appState} />,
+    skin:      <Skin      appState={appState} />,
+    fitness:   <Fitness   appState={appState} />,
+    insights:  <Insights  appState={appState} />,
+    chat:      <Chat      appState={appState} />,
+    settings:  <Settings  appState={appState} onLogout={auth.logout} />,
   };
 
   if (!auth.isLoggedIn) {

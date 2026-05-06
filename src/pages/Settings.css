@@ -1,0 +1,33 @@
+.settings-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+.settings-row:last-child { border-bottom: none; }
+.settings-title {
+  font-family: var(--f-body); font-size: 14px; font-weight: 600;
+  color: var(--ink); margin-bottom: 3px;
+}
+.settings-desc {
+  font-family: var(--f-mono); font-size: 10px; color: var(--ink-soft);
+  letter-spacing: 0.06em;
+}
+.settings-actions {
+  display: flex; align-items: center; gap: 12px;
+}
+.ai-status {
+  font-family: var(--f-mono); font-size: 10px; font-weight: 600;
+  color: var(--crystal); letter-spacing: 0.1em; text-transform: uppercase;
+}
+.danger-title { color: var(--jazz-red); }
+.settings-danger-row { border-top: 2px dashed var(--jazz-red); padding-top: 16px; margin-top: 4px; }
+.btn-danger {
+  background: var(--jazz-red) !important;
+  color: var(--paper) !important;
+  border-color: var(--ink) !important;
+}
+[data-theme="space"] .btn-danger { color: #fff !important; }
+.btn-sm {
+  padding: 8px 16px !important;
+  font-size: 9px !important;
+}

@@ -1,0 +1,71 @@
+.bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 120px;
+  padding: 8px 0 0;
+}
+.bar {
+  flex: 1;
+  position: relative;
+  display: flex; flex-direction: column; justify-content: flex-start; align-items: center;
+  min-height: 8px;
+  border: 1px solid var(--ink);
+}
+.bar-empty {
+  height: 20%;
+  background: var(--line);
+  border: 1px dashed var(--line);
+}
+.bar-val {
+  font-family: var(--f-mono); font-size: 9px; font-weight: 700;
+  color: var(--paper); padding-top: 3px;
+}
+.bar-label {
+  position: absolute; bottom: -20px;
+  font-family: var(--f-mono); font-size: 9px; font-weight: 600;
+  color: var(--ink-faint); text-align: center;
+  width: 100%; letter-spacing: 0.04em;
+}
+.bars-wrap { padding-bottom: 28px; }
+
+.bloat-labels {
+  display: flex; justify-content: space-between;
+  font-family: var(--f-mono); font-size: 10px; font-weight: 500;
+  color: var(--ink-soft); margin-top: 6px; letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.scale-row {
+  display: flex; gap: 8px; margin-top: 10px;
+}
+.scale-btn {
+  flex: 1;
+  background: var(--paper-2);
+  border: 2px solid var(--ink);
+  color: var(--ink);
+  font-family: var(--f-display);
+  font-size: 28px; line-height: 1;
+  padding: 12px 0;
+  cursor: pointer;
+  transition: all .1s;
+  box-shadow: 3px 3px 0 var(--line);
+}
+.scale-btn:hover { background: var(--paper); transform: translate(-1px,-1px); box-shadow: 4px 4px 0 var(--ink); }
+.scale-btn.selected { background: var(--accent); color: var(--paper); border-color: var(--ink); box-shadow: 3px 3px 0 var(--ink); }
+[data-theme="space"] .scale-btn.selected { color: #fff; }
+
+.table-card { padding: 16px 24px; }
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th {
+  font-family: var(--f-mono); font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.18em;
+  color: var(--ink-soft); padding: 8px 10px; text-align: left;
+  border-bottom: 2px solid var(--ink);
+}
+.data-table td { padding: 9px 10px; font-family: var(--f-body); font-size: 13px; color: var(--ink); border-bottom: 1px solid var(--line); }
+.data-table tr:last-child td { border-bottom: none; }
+.num-cell { font-family: var(--f-mono); font-size: 11px; font-weight: 600; letter-spacing: 0.04em; }
+.delta-up   { color: var(--jazz-red); font-weight: 700; }
+.delta-down { color: var(--crystal); font-weight: 700; }
+.empty-cell { text-align: center; color: var(--ink-faint); font-style: italic; padding: 24px; }
