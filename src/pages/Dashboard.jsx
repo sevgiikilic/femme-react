@@ -246,7 +246,7 @@ export default function Dashboard({ appState, onUpdate }) {
               <span style={{ marginLeft: 'auto', fontWeight: 400, opacity: 0.6 }}>Senin için</span>
             </div>
             <div className="page-grid grid-3">
-              <div className="card">
+              <div className="card tilt-l">
                 <div className="card-label">Beslenme</div>
                 <div className="card-inner">
                   <ul className="rec-list">
@@ -266,7 +266,7 @@ export default function Dashboard({ appState, onUpdate }) {
                   </ul>
                 </div>
               </div>
-              <div className="card">
+              <div className="card tilt-r">
                 <div className="card-label">Cilt</div>
                 <div className="card-inner">
                   <ul className="rec-list">

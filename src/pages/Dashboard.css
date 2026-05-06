@@ -57,7 +57,8 @@
   color: var(--ink-faint);
 }
 .dash-phase-name {
-  font-family: var(--f-pixel); font-size: 36px;
+  font-family: var(--f-shoujo); font-size: 36px;
+  text-shadow: 3px 3px 0 var(--accent);
   display: flex; align-items: center; gap: 12px; line-height: 1;
 }
 .dash-phase-dot {
@@ -100,6 +101,17 @@
 .split-banner-right {
   background: var(--moon-pink);
   padding: 20px 24px;
+  position: relative;
+  overflow: hidden;
+}
+.split-banner-right::after {
+  content: '☾';
+  position: absolute;
+  bottom: -20px; right: -20px;
+  font-size: 140px; line-height: 1;
+  -webkit-text-stroke: 3px var(--ink);
+  color: transparent;
+  pointer-events: none;
 }
 .split-banner-tag {
   font-family: var(--f-mono);

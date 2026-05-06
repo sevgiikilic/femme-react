@@ -40,3 +40,42 @@
   color: var(--ink-faint); font-family: var(--f-mono); font-size: 11px;
   letter-spacing: 0.08em; padding: 20px 0; text-transform: uppercase;
 }
+
+.mood-tag {
+  display: inline-block; margin-top: 6px;
+  font-family: var(--f-mono); font-size: 9px; font-weight: 700;
+  letter-spacing: 0.08em; padding: 2px 6px;
+}
+.mood-low  { background: rgba(220,40,60,0.15); color: var(--jazz-red); }
+.mood-high { background: rgba(80,200,120,0.15); color: var(--crystal); }
+
+.insight-msg {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 0; border-bottom: 1px dotted var(--line);
+}
+.insight-msg:last-child { border-bottom: none; }
+.insight-msg-icon {
+  font-family: var(--f-display); font-size: 20px;
+  color: var(--accent); flex-shrink: 0; width: 24px; text-align: center;
+}
+.insight-msg-text {
+  font-family: var(--f-body); font-size: 13px;
+  color: var(--ink-soft); line-height: 1.55;
+}
+
+.trigger-pct {
+  font-family: var(--f-display); font-size: 28px;
+  color: var(--jazz-red); flex-shrink: 0;
+  align-self: center;
+}
+
+.bloat-words-section { }
+.bloat-words {
+  display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px;
+}
+.bloat-word {
+  font-family: var(--f-mono); font-size: 11px;
+  background: var(--bg); border: 1px solid var(--line);
+  padding: 3px 8px; color: var(--ink-soft);
+}
+.bloat-word small { color: var(--accent); margin-left: 4px; }

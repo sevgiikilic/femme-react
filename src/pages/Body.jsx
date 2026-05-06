@@ -19,7 +19,8 @@ export default function Body({ appState }) {
     } else {
       newBody = [...state.body, entry].sort((a, b) => b.date.localeCompare(a.date));
     }
-    update({ body: newBody });
+    const newDays = { ...state.days, [date]: { ...(state.days[date] || {}), bloat } };
+    update({ body: newBody, days: newDays });
     setWeight(''); setWaist(''); setBloat(null);
   }
 
