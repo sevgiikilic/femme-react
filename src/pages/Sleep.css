@@ -1,0 +1,27 @@
+.sleep-bars {
+  display: flex; align-items: flex-end; gap: 6px;
+  height: 130px; padding-bottom: 30px;
+}
+.sleep-bar {
+  flex: 1; position: relative;
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+  border: 1px solid var(--ink);
+}
+.sleep-bar-empty { height: 12%; background: var(--line); border: 1px dashed var(--line); }
+.sleep-bar-val {
+  font-family: var(--f-mono); font-size: 10px; font-weight: 700;
+  color: var(--paper); padding-top: 4px;
+}
+.sleep-bar-label {
+  position: absolute; bottom: -22px;
+  font-family: var(--f-mono); font-size: 9px; font-weight: 700;
+  color: var(--ink-faint); text-align: center; width: 100%;
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+
+.sleep-dur-badge {
+  font-family: var(--f-pixel); font-size: 20px; color: var(--ink);
+  padding: 10px 14px; border: 2px solid var(--line);
+  background: var(--bg); min-width: 100px; text-align: center;
+}
+.mb-20 { margin-bottom: 20px; }

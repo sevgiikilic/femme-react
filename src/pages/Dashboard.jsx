@@ -10,13 +10,10 @@ function CycleRing({ day, total, phase }) {
   const offset = circumference - progress;
   const phaseData = PHASES[phase] || PHASES.follicular;
 
-  // tick marks at compass points
   const ticks = [0, 90, 180, 270].map(angle => {
     const rad = (angle - 90) * (Math.PI / 180);
-    const x1 = 100 + 92 * Math.cos(rad);
-    const y1 = 100 + 92 * Math.sin(rad);
-    const x2 = 100 + 98 * Math.cos(rad);
-    const y2 = 100 + 98 * Math.sin(rad);
+    const x1 = 100 + 92 * Math.cos(rad), y1 = 100 + 92 * Math.sin(rad);
+    const x2 = 100 + 98 * Math.cos(rad), y2 = 100 + 98 * Math.sin(rad);
     return <line key={angle} x1={x1} y1={y1} x2={x2} y2={y2} stroke="currentColor" strokeWidth="1.5" opacity="0.4" />;
   });
 
@@ -25,17 +22,9 @@ function CycleRing({ day, total, phase }) {
       <svg viewBox="0 0 200 200" className="ring-svg">
         {ticks}
         <circle cx="100" cy="100" r={R} fill="none" stroke="currentColor" strokeWidth="1" opacity="0.15" />
-        <circle
-          cx="100" cy="100" r={R}
-          fill="none"
-          stroke={phaseData.color}
-          strokeWidth="3"
-          strokeDasharray={circumference}
-          strokeDashoffset={offset}
-          transform="rotate(-90 100 100)"
-          strokeLinecap="square"
-        />
-        {/* compass dots */}
+        <circle cx="100" cy="100" r={R} fill="none" stroke={phaseData.color} strokeWidth="3"
+          strokeDasharray={circumference} strokeDashoffset={offset}
+          transform="rotate(-90 100 100)" strokeLinecap="square" />
         {[[-94,0],[94,0],[0,-94],[0,94]].map(([dx,dy], i) => (
           <circle key={i} cx={100+dx} cy={100+dy} r="2" fill={phaseData.color} opacity="0.6" />
         ))}
@@ -70,7 +59,7 @@ function OnboardModal({ onComplete }) {
         <div className="onboard-body">
           <div className="onboard-title">Merhaba,</div>
           <p style={{ fontFamily: 'var(--f-body)', fontSize: '14px', color: 'var(--ink-soft)', marginBottom: '24px', lineHeight: '1.6' }}>
-            Döngünü takip etmek için birkaç bilgiye ihtiyacım var. Bunları istediğin zaman ayarlardan güncelleyebilirsin.
+            Döngünü takip etmek için birkaç bilgiye ihtiyacım var.
           </p>
           <form onSubmit={handleSubmit}>
             <div className="form-group">
@@ -79,7 +68,7 @@ function OnboardModal({ onComplete }) {
             </div>
             <div className="form-group" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
               <div>
-                <label className="form-label">Ortalama Döngü Süresi (gün)</label>
+                <label className="form-label">Ortalama Döngü (gün)</label>
                 <input type="number" className="input" min="20" max="45" value={cycle} onChange={e => setCycle(e.target.value)} />
               </div>
               <div>
@@ -87,9 +76,7 @@ function OnboardModal({ onComplete }) {
                 <input type="number" className="input" min="1" max="10" value={period} onChange={e => setPeriod(e.target.value)} />
               </div>
             </div>
-            <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '8px' }}>
-              Başla →
-            </button>
+            <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '8px' }}>Başla →</button>
           </form>
         </div>
       </div>
@@ -99,53 +86,104 @@ function OnboardModal({ onComplete }) {
 
 // ── Split Banner ──────────────────────────────────────
 const BANNERS = {
-  menstrual: {
-    left:  { tag: '01 — ağır', text: 'Bedenine izin ver · dinlen · geç' },
-    right: { tag: 'half moon', text: 'Bugün güçsün — sadece fark farklı' },
-  },
-  follicular: {
-    left:  { tag: '02 — yükseliş', text: 'Yeni döngü · taze enerji · başla' },
-    right: { tag: 'waxing', text: 'Ay yenileniyor — sen de yenileniyorsun' },
-  },
-  ovulation: {
-    left:  { tag: '03 — zirve', text: 'Zirve noktanda · parlıyorsun · şimdi' },
-    right: { tag: 'full moon', text: 'Işığın en parlak — tüm dünya seninle' },
-  },
-  luteal: {
-    left:  { tag: '04 — içe dön', text: 'Yavaşlamak da güç · dinle · hisset' },
-    right: { tag: 'waning', text: 'Karanlık, yıldızları görmek için var' },
-  },
+  menstrual:  { left: { tag: '01 — ağır', text: 'Bedenine izin ver · dinlen · geç' }, right: { tag: 'half moon', text: 'Bugün güçsün — sadece fark farklı' } },
+  follicular: { left: { tag: '02 — yükseliş', text: 'Yeni döngü · taze enerji · başla' }, right: { tag: 'waxing', text: 'Ay yenileniyor — sen de yenileniyorsun' } },
+  ovulation:  { left: { tag: '03 — zirve', text: 'Zirve noktanda · parlıyorsun · şimdi' }, right: { tag: 'full moon', text: 'Işığın en parlak — tüm dünya seninle' } },
+  luteal:     { left: { tag: '04 — içe dön', text: 'Yavaşlamak da güç · dinle · hisset' }, right: { tag: 'waning', text: 'Karanlık, yıldızları görmek için var' } },
 };
 
-function pickBanner(phaseKey) {
-  return BANNERS[phaseKey] || BANNERS.follicular;
+// ── TODAY STATE computation ───────────────────────────
+const STATE_ICONS = { sleep: '○', mood: '♡', energy: '↯', bloat: '◉', symptom: '△', cycle: '◎' };
+
+function computeTodayState(state, info, todayDate) {
+  const todayLog  = state.days[todayDate] || {};
+  const lastBody  = state.body.find(b => b.date === todayDate);
+  const lastSleep = (state.sleep || []).find(s => s.date === todayDate || s.date === addDays(todayDate, -1));
+  const bloat     = lastBody?.bloat ?? todayLog.bloat;
+  const badSyms   = ['Kramp', 'Baş ağrısı', 'Bulantı', 'Yorgunluk', 'Sinirlilik'];
+  const todayBad  = (todayLog.symptoms || []).filter(s => badSyms.includes(s));
+
+  const hasData = todayLog.mood || todayLog.energy || bloat != null || lastSleep || todayBad.length;
+  if (!hasData) return null;
+
+  const factors = [];
+
+  if (lastSleep?.quality <= 2)
+    factors.push({ type: 'sleep', label: `Yetersiz uyku — ${lastSleep.quality}/5`, neg: true });
+  else if (lastSleep?.quality >= 4)
+    factors.push({ type: 'sleep', label: `İyi uyku — ${lastSleep.quality}/5`, neg: false });
+
+  if (todayLog.mood != null) {
+    if (todayLog.mood <= 2) factors.push({ type: 'mood', label: 'Düşük ruh hali', neg: true });
+    else if (todayLog.mood >= 4) factors.push({ type: 'mood', label: 'Yüksek ruh hali', neg: false });
+  }
+  if (todayLog.energy != null) {
+    if (todayLog.energy <= 2) factors.push({ type: 'energy', label: 'Düşük enerji', neg: true });
+    else if (todayLog.energy >= 4) factors.push({ type: 'energy', label: 'Yüksek enerji', neg: false });
+  }
+  if (bloat >= 2) factors.push({ type: 'bloat', label: 'Şişkinlik', neg: true });
+  if (todayBad.length) factors.push({ type: 'symptom', label: todayBad[0], neg: true });
+  if (info) factors.push({ type: 'cycle', label: `${PHASES[info.phaseKey].name} · gün ${info.dayInCycle}`, neg: null });
+
+  const negs = factors.filter(f => f.neg === true).length;
+  const pos  = factors.filter(f => f.neg === false).length;
+
+  let label, level;
+  if      (negs >= 3)               { label = 'Zor Bir Gün';  level = 'low'; }
+  else if (negs >= 2)               { label = 'Düşük Enerji'; level = 'low'; }
+  else if (negs === 1 && pos === 0) { label = 'Sakin Mod';    level = 'mid'; }
+  else if (pos >= 2)                { label = 'Enerjik';      level = 'high'; }
+  else if (pos >= 1)                { label = 'Dengeli';      level = 'high'; }
+  else                              { label = 'Nötr';         level = 'mid'; }
+
+  return { label, level, factors: factors.slice(0, 5) };
 }
 
 // ── Dashboard ─────────────────────────────────────────
-export default function Dashboard({ appState, onUpdate }) {
+export default function Dashboard({ appState }) {
   const { state, update } = appState;
 
   function handleOnboard({ last, cycle, period }) {
-    update({
-      setup: true,
-      avgCycle: cycle,
-      avgPeriod: period,
-      periods: [{ start: last, length: period, flow: 'orta' }],
-    });
+    update({ setup: true, avgCycle: cycle, avgPeriod: period, periods: [{ start: last, length: period, flow: 'orta' }] });
   }
 
-  const info = cycleInfo(state);
-  const phase = info ? PHASES[info.phaseKey] : null;
+  const info      = cycleInfo(state);
+  const phase     = info ? PHASES[info.phaseKey] : null;
   const todayDate = today();
+  const todayDay  = state.days[todayDate] || {};
+  const lastBody  = [...state.body].sort((a, b) => (b.date || '').localeCompare(a.date || ''))[0];
+  const weekWorkouts = state.workouts.filter(w => Math.round((new Date() - new Date(w.date)) / 86400000) < 7);
+  const todayState   = computeTodayState(state, info, todayDate);
 
-  // Last body measurement for stat cards
-  const lastBody = [...state.body].sort((a, b) => b.date?.localeCompare(a.date || ''))[0];
-  // Last symptoms for today
-  const todayDay = state.days[todayDate] || {};
-  const weekWorkouts = state.workouts.filter(w => {
-    const diff = Math.round((new Date() - new Date(w.date)) / 86400000);
-    return diff >= 0 && diff < 7;
-  });
+  // Quick log helpers
+  function updateToday(patch) {
+    update({ days: { ...state.days, [todayDate]: { ...todayDay, ...patch } } });
+  }
+  function addSymptomToday(sym) {
+    const syms = new Set(todayDay.symptoms || []);
+    syms.add(sym);
+    updateToday({ symptoms: [...syms] });
+  }
+  function logQuickSleep(quality, duration) {
+    const existing = (state.sleep || []).findIndex(s => s.date === todayDate);
+    const entry = { date: todayDate, bedtime: '', wakeTime: '', duration, quality, notes: 'hızlı giriş' };
+    const newSleep = existing >= 0
+      ? (state.sleep || []).map((s, i) => i === existing ? entry : s)
+      : [...(state.sleep || []), entry];
+    update({ sleep: newSleep });
+  }
+
+  const QUICK_LOG = [
+    { label: 'İyi uyudum',     tap: () => logQuickSleep(4, 480) },
+    { label: 'Kötü uyudum',    tap: () => logQuickSleep(2, 330) },
+    { label: 'Enerjik',        tap: () => updateToday({ energy: 4 }) },
+    { label: 'Yorgunum',       tap: () => updateToday({ energy: 2 }) },
+    { label: 'Mutluyum',       tap: () => updateToday({ mood: 4 }) },
+    { label: 'Moralim bozuk',  tap: () => updateToday({ mood: 2 }) },
+    { label: 'Şişkinlik var',  tap: () => updateToday({ bloat: 2 }) },
+    { label: 'Baş ağrısı',    tap: () => addSymptomToday('Baş ağrısı') },
+    { label: 'Kramp var',      tap: () => addSymptomToday('Kramp') },
+  ];
 
   return (
     <>
@@ -159,14 +197,45 @@ export default function Dashboard({ appState, onUpdate }) {
             </div>
             <h1 className="page-title" data-en="TODAY">Bugün</h1>
           </div>
-          <div className="session-tag">
-            {formatLong(todayDate)}
+          <div className="session-tag">{formatLong(todayDate)}</div>
+        </div>
+
+        {/* TODAY STATE CARD */}
+        {todayState ? (
+          <div className={`today-state-card today-state-${todayState.level}`}>
+            <div className="today-state-left">
+              <div className="today-state-eyebrow">Bugünkü halin</div>
+              <div className="today-state-label">{todayState.label}</div>
+            </div>
+            <div className="today-state-right">
+              {todayState.factors.map((f, i) => (
+                <div key={i} className={`today-state-factor${f.neg === true ? ' factor-neg' : f.neg === false ? ' factor-pos' : ' factor-neutral'}`}>
+                  <span className="factor-icon">{STATE_ICONS[f.type]}</span>
+                  {f.label}
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="today-state-empty">
+            <div className="today-state-empty-label">Bugün henüz veri yok</div>
+            <div className="today-state-empty-sub">Aşağıdan hızlı kayıt yap veya semptomlar sayfasını kullan</div>
+          </div>
+        )}
+
+        {/* Quick Event Log */}
+        <div className="quick-log">
+          <div className="quick-log-label">Hızlı Kayıt</div>
+          <div className="quick-log-chips">
+            {QUICK_LOG.map(e => (
+              <button key={e.label} className="quick-chip" type="button" onClick={e.tap}>{e.label}</button>
+            ))}
           </div>
         </div>
 
-        {/* Cycle card + phase info */}
+        {/* Cycle card */}
         {info && phase ? (
-          <div className="dash-cycle-card">
+          <div className="dash-cycle-card mt-24">
             <CycleRing day={info.dayInCycle} total={info.avgC} phase={info.phaseKey} />
             <div className="dash-phase-info">
               <div className="dash-phase-eyebrow">Day {info.dayInCycle} of {info.avgC}</div>
@@ -192,9 +261,7 @@ export default function Dashboard({ appState, onUpdate }) {
             </div>
           </div>
         ) : (
-          <div className="page-coming" style={{ marginTop: 0 }}>
-            Döngü verisini görmek için kurulumu tamamla.
-          </div>
+          <div className="page-coming mt-24">Döngü verisini görmek için kurulumu tamamla.</div>
         )}
 
         {/* 4 stat cards */}
@@ -223,7 +290,7 @@ export default function Dashboard({ appState, onUpdate }) {
 
         {/* Split banner */}
         {phase && (() => {
-          const b = pickBanner(info.phaseKey);
+          const b = BANNERS[info.phaseKey] || BANNERS.follicular;
           return (
             <div className="split-banner mt-24">
               <div className="split-banner-left">
@@ -250,9 +317,7 @@ export default function Dashboard({ appState, onUpdate }) {
                 <div className="card-label">Beslenme</div>
                 <div className="card-inner">
                   <ul className="rec-list">
-                    {phase.food.map((item, i) => (
-                      <li key={i} className="rec-item">{item}</li>
-                    ))}
+                    {phase.food.map((item, i) => <li key={i} className="rec-item">{item}</li>)}
                   </ul>
                 </div>
               </div>
@@ -260,9 +325,7 @@ export default function Dashboard({ appState, onUpdate }) {
                 <div className="card-label">Spor</div>
                 <div className="card-inner">
                   <ul className="rec-list">
-                    {phase.fitness.map((item, i) => (
-                      <li key={i} className="rec-item">{item}</li>
-                    ))}
+                    {phase.fitness.map((item, i) => <li key={i} className="rec-item">{item}</li>)}
                   </ul>
                 </div>
               </div>
@@ -270,9 +333,7 @@ export default function Dashboard({ appState, onUpdate }) {
                 <div className="card-label">Cilt</div>
                 <div className="card-inner">
                   <ul className="rec-list">
-                    {phase.skin.map((item, i) => (
-                      <li key={i} className="rec-item">{item}</li>
-                    ))}
+                    {phase.skin.map((item, i) => <li key={i} className="rec-item">{item}</li>)}
                   </ul>
                 </div>
               </div>

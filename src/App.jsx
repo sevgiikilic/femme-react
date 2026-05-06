@@ -13,6 +13,7 @@ import Fitness from './pages/Fitness';
 import Insights from './pages/Insights';
 import Chat from './pages/Chat';
 import Settings from './pages/Settings';
+import Sleep from './pages/Sleep';
 import Sidebar from './components/Sidebar';
 import './styles/global.css';
 import './App.css';
@@ -31,6 +32,7 @@ export default function App() {
   const PAGES = {
     dashboard: <Dashboard appState={appState} />,
     symptoms:  <Symptoms  appState={appState} />,
+    sleep:     <Sleep     appState={appState} />,
     body:      <Body      appState={appState} />,
     meals:     <Meals     appState={appState} />,
     cycle:     <Cycle     appState={appState} />,

@@ -1,3 +1,101 @@
+/* ── TODAY STATE CARD ── */
+.today-state-card {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  border: 3px solid var(--ink);
+  overflow: hidden;
+  margin-bottom: 0;
+}
+.today-state-low  { box-shadow: 8px 8px 0 var(--jazz-red); }
+.today-state-mid  { box-shadow: 8px 8px 0 var(--gold); }
+.today-state-high { box-shadow: 8px 8px 0 var(--crystal); }
+
+.today-state-left {
+  padding: 28px 28px 24px;
+  border-right: 3px solid var(--ink);
+  background: var(--ink);
+  display: flex; flex-direction: column; justify-content: center;
+}
+.today-state-eyebrow {
+  font-family: var(--f-mono); font-size: 9px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.3em;
+  color: var(--paper); opacity: 0.6; margin-bottom: 10px;
+}
+.today-state-label {
+  font-family: var(--f-shoujo); font-size: 42px; line-height: 1;
+  color: var(--paper);
+}
+.today-state-low  .today-state-label { color: #ff8fa3; }
+.today-state-high .today-state-label { color: var(--crystal); }
+
+.today-state-right {
+  padding: 24px 28px;
+  background: var(--paper);
+  display: flex; flex-direction: column; justify-content: center;
+  gap: 10px;
+}
+.today-state-factor {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--f-body); font-size: 13px; color: var(--ink-soft);
+}
+.factor-neg  { color: var(--ink); }
+.factor-pos  { color: var(--ink); }
+.factor-icon {
+  font-family: var(--f-mono); font-size: 13px; font-weight: 700;
+  width: 18px; flex-shrink: 0; text-align: center;
+}
+.factor-neg  .factor-icon { color: var(--jazz-red); }
+.factor-pos  .factor-icon { color: var(--crystal); }
+.factor-neutral .factor-icon { color: var(--accent); }
+
+.today-state-empty {
+  padding: 24px 28px;
+  border: 3px dashed var(--line);
+  background: var(--paper);
+  text-align: center;
+}
+.today-state-empty-label {
+  font-family: var(--f-display); font-size: 28px; color: var(--ink-faint);
+}
+.today-state-empty-sub {
+  font-family: var(--f-mono); font-size: 10px; color: var(--ink-faint);
+  letter-spacing: 0.1em; text-transform: uppercase; margin-top: 6px;
+}
+
+/* ── QUICK LOG ── */
+.quick-log {
+  margin-top: 16px;
+  padding: 14px 0;
+  border-top: 2px dashed var(--line);
+  border-bottom: 2px dashed var(--line);
+}
+.quick-log-label {
+  font-family: var(--f-mono); font-size: 9px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.3em;
+  color: var(--ink-faint); margin-bottom: 10px;
+}
+.quick-log-chips {
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
+.quick-chip {
+  font-family: var(--f-mono); font-size: 9px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.14em;
+  padding: 6px 12px;
+  border: 2px solid var(--line);
+  background: var(--bg); color: var(--ink-soft);
+  cursor: pointer; transition: all .1s;
+}
+.quick-chip:hover {
+  border-color: var(--accent); color: var(--ink);
+  background: var(--paper); box-shadow: 2px 2px 0 var(--accent);
+  transform: translate(-1px, -1px);
+}
+.quick-chip:active {
+  background: var(--accent); color: var(--paper);
+  border-color: var(--ink); transform: translate(0,0);
+  box-shadow: none;
+}
+
 /* ── cycle card ── */
 .dash-cycle-card {
   display: grid;

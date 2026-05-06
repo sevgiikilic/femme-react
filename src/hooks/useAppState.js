@@ -16,6 +16,7 @@ const DEFAULT = {
   customSymptoms: [],
   chat: [],
   aiUrl: '',
+  sleep: [],
 };
 
 function load() {
