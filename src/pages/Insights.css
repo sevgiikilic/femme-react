@@ -36,6 +36,20 @@
 .trigger-name { font-family: var(--f-body); font-size: 14px; color: var(--ink); font-weight: 500; }
 .trigger-issues { font-family: var(--f-mono); font-size: 10px; color: var(--ink-soft); letter-spacing: 0.06em; margin-top: 2px; }
 
+.insights-narrative { margin-bottom: 0; }
+.narrative-line {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 10px 0; border-bottom: 1px dashed var(--line);
+  font-family: var(--f-body); font-size: 14px;
+  color: var(--ink); line-height: 1.55;
+}
+.narrative-line:last-child { border-bottom: none; }
+.narrative-icon {
+  font-family: var(--f-mono); font-size: 14px; font-weight: 700;
+  color: var(--accent); width: 20px; flex-shrink: 0; text-align: center;
+  margin-top: 1px;
+}
+
 .empty-msg {
   color: var(--ink-faint); font-family: var(--f-mono); font-size: 11px;
   letter-spacing: 0.08em; padding: 20px 0; text-transform: uppercase;

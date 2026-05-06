@@ -5,22 +5,44 @@ import './Body.css';
 function getBloatInsight(state, date, bloatVal) {
   if (bloatVal == null || bloatVal < 2) return null;
 
-  const prevDate   = addDays(date, -1);
-  const reactFoods = state.foods.filter(f => f.pref === 'react' || (f.issues && f.issues.length));
+  const prevDate    = addDays(date, -1);
+  const reactFoods  = state.foods.filter(f => f.pref === 'react' || (f.issues && f.issues.length));
   const recentMeals = state.meals.filter(m => m.date === date || m.date === prevDate);
+  const ci          = cycleInfo(state, date);
+  const inLuteal    = ci?.phaseKey === 'luteal';
+  const inMenstrual = ci?.phaseKey === 'menstrual';
 
-  const matched = reactFoods.filter(food =>
-    recentMeals.some(m => m.desc.toLowerCase().includes(food.name.toLowerCase()))
-  );
+  const bloatDays = new Set(state.body.filter(b => b.bloat != null && b.bloat >= 2).map(b => b.date));
+
+  // Find react-tagged foods in recent meals + calculate historical correlation %
+  const matched = reactFoods
+    .map(food => {
+      const name = food.name.toLowerCase();
+      const eaten = recentMeals.some(m => m.desc.toLowerCase().includes(name));
+      if (!eaten) return null;
+      const allEaten = state.meals.filter(m => m.desc.toLowerCase().includes(name));
+      if (!allEaten.length) return null;
+      const bloatAfter = allEaten.filter(m => bloatDays.has(m.date) || bloatDays.has(addDays(m.date, 1))).length;
+      const pct = Math.round((bloatAfter / allEaten.length) * 100);
+      return { name: food.name, pct, total: allEaten.length };
+    })
+    .filter(Boolean)
+    .sort((a, b) => b.pct - a.pct);
 
   if (matched.length > 0) {
-    const names = matched.map(f => f.name).join(', ');
-    return `${names} tükettikten sonra şişkinlik oluşmuş olabilir — tepki listendeki yiyecekleri takip et.`;
+    const top = matched[0];
+    const foodPart = top.total >= 3 && top.pct >= 50
+      ? `${top.name} tükettiğin günlerin %${top.pct}'inde şişkinlik görülüyor`
+      : `Tepki listendeki ${top.name} bugün tüketilmiş`;
+
+    if (inLuteal) {
+      return `${foodPart} — üstelik luteal fazdasın, bu iki faktör birleşiyor olabilir.`;
+    }
+    return `${foodPart} — bu bir örüntü olabilir, gözlemlemek isteyebilirsin.`;
   }
 
-  const ci = cycleInfo(state, date);
-  if (ci?.phaseKey === 'luteal')    return 'Luteal fazda ödem birikmesi yaygındır — bu döngü kökenli olabilir.';
-  if (ci?.phaseKey === 'menstrual') return 'Adet döneminde şişkinlik artabilir — prostaglandinler etkilidir.';
+  if (inLuteal)    return 'Luteal fazda ödem birikmesi oldukça yaygın — bu büyük ihtimalle döngü kökenli.';
+  if (inMenstrual) return 'Adet döneminde şişkinlik artabilir, bu çok normal ve geçici.';
   return null;
 }
 

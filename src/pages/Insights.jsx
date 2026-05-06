@@ -23,7 +23,7 @@ function extractWords(desc) {
 export default function Insights({ appState }) {
   const { state } = appState;
 
-  const avgC = getAvgCycleLen(state);
+  const avgC     = getAvgCycleLen(state);
   const isHealthy = avgC >= 21 && avgC <= 35;
 
   // ── Symptom counts ──
@@ -115,6 +115,40 @@ export default function Insights({ appState }) {
 
   const triggers = state.foods.filter(f => (f.issues && f.issues.length > 0) || f.pref === 'react');
 
+  // ── Narrative summary ──
+  const narrative = [];
+  // Mood patterns
+  Object.entries(phaseMoods).forEach(([k, moods]) => {
+    const s = moodStats(moods);
+    if (!s || s.n < 3) return;
+    if (s.lowPct >= 50)
+      narrative.push({ icon: '♡', text: `${PHASES[k].name} fazında ruh halinin %${s.lowPct}'inde düşük hissediyorsun — bu döngü kökenli ve geçici.` });
+    else if (s.highPct >= 50)
+      narrative.push({ icon: '★', text: `${PHASES[k].name} fazında ruh halinin %${s.highPct}'inde yüksek enerji kayıtlı — bu senin güçlü dönemin.` });
+  });
+  // Dominant symptom + phase
+  if (topSym[0] && topSym[0][1] >= 3) {
+    const phaseForSym = {};
+    Object.entries(state.days).forEach(([date, d]) => {
+      if (!(d.symptoms || []).includes(topSym[0][0])) return;
+      const ci = cycleInfo(state, date);
+      if (ci) phaseForSym[ci.phaseKey] = (phaseForSym[ci.phaseKey] || 0) + 1;
+    });
+    const topPhase = Object.entries(phaseForSym).sort((a, b) => b[1] - a[1])[0];
+    if (topPhase)
+      narrative.push({ icon: '△', text: `"${topSym[0][0]}" en sık ${PHASES[topPhase[0]].name} fazında görülüyor (${topSym[0][1]} kez kayıtlı).` });
+  }
+  // Food correlation
+  if (foodBloatCorr.length > 0 && foodBloatCorr[0].pct >= 60 && foodBloatCorr[0].total >= 3)
+    narrative.push({ icon: '!', text: `${foodBloatCorr[0].name} tükettiğin günlerin %${foodBloatCorr[0].pct}'inde şişkinlik görülüyor — hassasiyet olabilir, gözlemlemek isteyebilirsin.` });
+  // Highest bloat phase
+  const highestBloatPhase = Object.entries(phaseBloats)
+    .filter(([, arr]) => arr.length >= 2)
+    .map(([k, arr]) => ({ k, avg: arr.reduce((s, v) => s + v, 0) / arr.length }))
+    .sort((a, b) => b.avg - a.avg)[0];
+  if (highestBloatPhase && highestBloatPhase.avg >= 1.5)
+    narrative.push({ icon: '◉', text: `Şişkinliğin en yoğun olduğu dönem ${PHASES[highestBloatPhase.k].name} fazı — döngüyle bağlantılı olabilir.` });
+
   return (
     <div className="page-wrap">
       <div className="page-head">
@@ -125,7 +159,21 @@ export default function Insights({ appState }) {
         <div className="session-tag">{state.periods.length} döngü</div>
       </div>
 
-      <div className="page-grid grid-3">
+      {narrative.length > 0 && (
+        <div className="card insights-narrative">
+          <div className="card-label">Senin Örüntülerinden</div>
+          <div className="card-inner">
+            {narrative.map((n, i) => (
+              <div key={i} className="narrative-line">
+                <span className="narrative-icon">{n.icon}</span>
+                <span>{n.text}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div className="page-grid grid-3 mt-24">
         <div className="stat-card">
           <div className="stat-label">Ortalama Döngü</div>
           <div className="stat-value">{avgC}<span>g</span></div>

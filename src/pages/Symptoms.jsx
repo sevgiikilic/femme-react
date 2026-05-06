@@ -18,12 +18,29 @@ const SYMPTOM_TIPS = {
   'Uyku bozukluğu':   'Progesteronun uyku üzerindeki etkisi gerçek — erken yatmayı dene.',
 };
 
-const PHASE_MSGS = {
-  menstrual:  ['Bugün dinlenmek de bir seçimdir.', 'Kendine nazik olmak bu fazda en önemli iş.', 'Demir ve C vitamini bu dönemde destek olur.'],
-  follicular: ['Enerji yükseliyor — bu dalgayı yakalamak için iyi an.', 'Bu fazda öğrenme kapasiten artar.', 'Vücudun potansiyeli yüksek — kendin için kullan.'],
-  ovulation:  ['Bu haftanın enerjisi sana özgü — iyi hisset.', 'Zirve enerji dönemin. Planlarını öne al.', 'İletişim ve yaratıcılık bu fazda en yüksek.'],
-  luteal:     ['İçe dönmek bir zayıflık değil — bir dönem.', 'Magnezyum ve B6 bu fazda iyi arkadaşlar.', 'Bu duygular gerçek ama geçici.', 'Yavaşlamak da üretkenliğin bir biçimi.'],
-};
+// Symptoms that are inherently negative — always respond with support, never phase hype
+const NEGATIVE_SYMPTOMS = new Set([
+  'Kramp', 'Baş ağrısı', 'Şişkinlik', 'Yorgunluk', 'Duygusallık', 'Sinirlilik',
+  'Akne / Sivilce', 'Ağrılı göğüs', 'Bel ağrısı', 'Ruh hali değişimi', 'İştah artışı',
+  'Bulantı', 'Uyku bozukluğu', 'Konsantrasyon güçlüğü', 'Su tutma', 'Gerginlik', 'Kaygı',
+]);
+
+const SUPPORT_MSGS = [
+  'Böyle hissetmen çok normal, özellikle bu dönemde.',
+  'Bugün biraz zor geçiyor olabilir — kendine nazik ol.',
+  'Bu duygu geçici, yalnız değilsin.',
+  'Bedenin sana bir şey anlatıyor — onu dinlemek önemli.',
+  'Bu deneyim döngünün bir parçası ve geçecek.',
+  'Kendine iyi bak bugün — bunu hak ediyorsun.',
+];
+
+const POSITIVE_MSGS = [
+  'Enerjin çok güzel görünüyor bugün.',
+  'Bunu hissettiğin günleri fark etmek çok değerli.',
+  'Bu hissin tadını çıkar — bedenin iyi hissediyor.',
+  'Harika bir gün gibi görünüyor.',
+  'Bu enerjiyi kendin için kullan.',
+];
 
 function getMoodInsight(state, phaseKey, currentMood) {
   const phaseMoods = Object.entries(state.days)
@@ -76,36 +93,34 @@ export default function Symptoms({ appState }) {
     toastTimer.current = setTimeout(() => setToast(null), 4500);
   }
 
+  function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
   function toggleSymptom(s) {
     const day = state.days[today()] || {};
     const syms = new Set(day.symptoms || []);
     const adding = !syms.has(s);
     if (adding) syms.add(s); else syms.delete(s);
     update({ days: { ...state.days, [today()]: { ...day, symptoms: [...syms] } } });
-    if (adding) {
-      const tip = SYMPTOM_TIPS[s];
-      if (tip) {
-        showToast(tip);
-      } else if (phase) {
-        const msgs = PHASE_MSGS[info.phaseKey];
-        showToast(msgs[Math.floor(Math.random() * msgs.length)]);
-      }
+    if (!adding) return;
+    const tip = SYMPTOM_TIPS[s];
+    if (tip) {
+      // SYMPTOM_TIPS are already empathetic — always show them
+      showToast(tip, NEGATIVE_SYMPTOMS.has(s) ? 'support' : 'info');
+    } else if (NEGATIVE_SYMPTOMS.has(s)) {
+      // Never show positive/phase-hype for a negative symptom
+      showToast(rand(SUPPORT_MSGS), 'support');
     }
+    // For unknown/neutral symptoms, show nothing — silence is better than wrong tone
   }
 
   function handleMood(v) {
     updateDay({ mood: v });
     if (info) {
       const insight = getMoodInsight(state, info.phaseKey, v);
-      if (insight) {
-        showToast(insight.msg, insight.type);
-        return;
-      }
+      if (insight) { showToast(insight.msg, insight.type); return; }
     }
-    if (phase) {
-      const msgs = PHASE_MSGS[info.phaseKey];
-      showToast(msgs[Math.floor(Math.random() * msgs.length)]);
-    }
+    if (v <= 2) showToast(rand(SUPPORT_MSGS), 'support');
+    else if (v >= 4) showToast(rand(POSITIVE_MSGS));
   }
 
   function addCustom() {
