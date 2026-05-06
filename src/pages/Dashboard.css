@@ -84,6 +84,37 @@
   color: var(--ink);
 }
 
+/* ── split banner ── */
+.split-banner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 3px solid var(--ink);
+  box-shadow: 5px 5px 0 var(--ink);
+  overflow: hidden;
+}
+.split-banner-left {
+  background: var(--gold);
+  padding: 20px 24px;
+  border-right: 2px solid var(--ink);
+}
+.split-banner-right {
+  background: var(--moon-pink);
+  padding: 20px 24px;
+}
+.split-banner-tag {
+  font-family: var(--f-mono);
+  font-size: 9px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.28em;
+  color: var(--ink); margin-bottom: 8px; opacity: 0.7;
+}
+.split-banner-text {
+  font-family: var(--f-pixel);
+  font-size: 18px; line-height: 1.45;
+  color: var(--ink);
+}
+[data-theme="space"] .split-banner-right .split-banner-text,
+[data-theme="space"] .split-banner-right .split-banner-tag { color: #fff; }
+
 /* responsive */
 @media (max-width: 900px) {
   .dash-cycle-card {

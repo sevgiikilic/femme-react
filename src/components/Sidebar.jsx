@@ -2,21 +2,21 @@ import './Sidebar.css';
 
 const NAV = [
   { group: 'Günlük', items: [
-    { id: 'dashboard', label: 'Bugün',         num: 'I'    },
-    { id: 'symptoms',  label: 'Semptomlar',    num: 'II'   },
-    { id: 'body',      label: 'Beden',         num: 'III'  },
-    { id: 'meals',     label: 'Yemek Günlüğü', num: 'IV'   },
+    { id: 'dashboard', label: 'Bugün',         num: '01' },
+    { id: 'symptoms',  label: 'Semptomlar',    num: '02' },
+    { id: 'body',      label: 'Beden',         num: '03' },
+    { id: 'meals',     label: 'Yemek Günlüğü', num: '04' },
   ]},
   { group: 'Kütüphane', items: [
-    { id: 'cycle',    label: 'Döngü',           num: 'V'    },
-    { id: 'food',     label: 'Beslenme',        num: 'VI'   },
-    { id: 'skin',     label: 'Cilt',            num: 'VII'  },
-    { id: 'fitness',  label: 'Spor',            num: 'VIII' },
+    { id: 'cycle',    label: 'Döngü',           num: '05' },
+    { id: 'food',     label: 'Beslenme',        num: '06' },
+    { id: 'skin',     label: 'Cilt',            num: '07' },
+    { id: 'fitness',  label: 'Spor',            num: '08' },
   ]},
   { group: 'İçgörüler', items: [
-    { id: 'insights', label: 'Öngörüler',       num: 'IX'   },
-    { id: 'chat',     label: 'Sohbet',          num: 'X'    },
-    { id: 'settings', label: 'Ayarlar',         num: 'XI'   },
+    { id: 'insights', label: 'Öngörüler',       num: '09' },
+    { id: 'chat',     label: 'Sohbet',          num: '10' },
+    { id: 'settings', label: 'Ayarlar',         num: '11' },
   ]},
 ];
 

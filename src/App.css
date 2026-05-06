@@ -29,25 +29,30 @@
 }
 /* film strip holes */
 .page-head::before {
-  content: '◉  ◉  ◉  ◉  ◉  ◉  ◉  ◉  ◉  ◉';
+  content: '';
   position: absolute; top: 0; left: 0; right: 0;
-  font-size: 8px; letter-spacing: 0.3em;
-  color: var(--ink-faint); opacity: 0.5;
-  line-height: 1.2; padding: 2px 8px;
-  background: var(--paper-2);
-  border-bottom: 2px solid var(--line);
+  height: 14px;
+  background: repeating-linear-gradient(
+    to right,
+    var(--ink) 0 8px,
+    transparent 8px 18px
+  );
+  opacity: 0.22;
+  pointer-events: none;
 }
-/* speed lines */
+/* speed-line quarter circle bottom-right */
 .page-head::after {
   content: '';
-  position: absolute; inset: 0;
-  background: repeating-linear-gradient(
-    -15deg,
-    transparent 0,
-    transparent 14px,
-    rgba(255,255,255,.018) 14px,
-    rgba(255,255,255,.018) 15px
+  position: absolute;
+  right: -55px; bottom: -55px;
+  width: 220px; height: 220px;
+  background: repeating-conic-gradient(
+    from 0deg,
+    var(--accent) 0deg 4deg,
+    transparent 4deg 22deg
   );
+  opacity: 0.15;
+  border-radius: 50%;
   pointer-events: none;
 }
 .page-head-left { flex: 1; padding-top: 14px; }
@@ -71,6 +76,7 @@
   letter-spacing: -0.01em; line-height: 0.88;
   color: var(--ink); text-transform: uppercase;
   position: relative; display: inline-block;
+  text-shadow: 6px 6px 0 var(--accent);
 }
 .page-title::after {
   content: attr(data-en);
@@ -559,6 +565,16 @@ select.input {
   font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.08em;
   text-transform: uppercase;
 }
+
+/* ── card shadow variants ── */
+.card-shadow-accent { box-shadow: 5px 5px 0 var(--accent) !important; }
+.card-shadow-gold   { box-shadow: 5px 5px 0 var(--gold) !important; }
+.card-shadow-pink   { box-shadow: 5px 5px 0 var(--moon-pink) !important; }
+
+/* ── manga panel tilt ── */
+.tilt-l { transform: rotate(-0.6deg); }
+.tilt-r { transform: rotate( 0.6deg); }
+.tilt-l:hover, .tilt-r:hover { transform: rotate(0deg) translate(-1px,-1px); }
 
 /* ── helpers ── */
 .mt-0 { margin-top: 0 !important; }

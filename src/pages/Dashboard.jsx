@@ -97,6 +97,30 @@ function OnboardModal({ onComplete }) {
   );
 }
 
+// ── Split Banner ──────────────────────────────────────
+const BANNERS = {
+  menstrual: {
+    left:  { tag: '01 — ağır', text: 'Bedenine izin ver · dinlen · geç' },
+    right: { tag: 'half moon', text: 'Bugün güçsün — sadece fark farklı' },
+  },
+  follicular: {
+    left:  { tag: '02 — yükseliş', text: 'Yeni döngü · taze enerji · başla' },
+    right: { tag: 'waxing', text: 'Ay yenileniyor — sen de yenileniyorsun' },
+  },
+  ovulation: {
+    left:  { tag: '03 — zirve', text: 'Zirve noktanda · parlıyorsun · şimdi' },
+    right: { tag: 'full moon', text: 'Işığın en parlak — tüm dünya seninle' },
+  },
+  luteal: {
+    left:  { tag: '04 — içe dön', text: 'Yavaşlamak da güç · dinle · hisset' },
+    right: { tag: 'waning', text: 'Karanlık, yıldızları görmek için var' },
+  },
+};
+
+function pickBanner(phaseKey) {
+  return BANNERS[phaseKey] || BANNERS.follicular;
+}
+
 // ── Dashboard ─────────────────────────────────────────
 export default function Dashboard({ appState, onUpdate }) {
   const { state, update } = appState;
@@ -196,6 +220,23 @@ export default function Dashboard({ appState, onUpdate }) {
             <div className="stat-sub">{weekWorkouts.reduce((s, w) => s + (w.duration || 0), 0)} dk toplam</div>
           </div>
         </div>
+
+        {/* Split banner */}
+        {phase && (() => {
+          const b = pickBanner(info.phaseKey);
+          return (
+            <div className="split-banner mt-24">
+              <div className="split-banner-left">
+                <div className="split-banner-tag">{b.left.tag}</div>
+                <div className="split-banner-text">{b.left.text}</div>
+              </div>
+              <div className="split-banner-right">
+                <div className="split-banner-tag">{b.right.tag}</div>
+                <div className="split-banner-text">{b.right.text}</div>
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Phase recommendations */}
         {phase && (
