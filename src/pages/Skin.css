@@ -21,6 +21,28 @@
   font-family: var(--f-mono); font-size: 10px; color: var(--accent);
   letter-spacing: 0.1em; margin-top: 4px; text-transform: uppercase;
 }
+.search-results {
+  position: absolute; top: calc(100% - 2px); left: 0; right: 0;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  z-index: 200;
+  max-height: 260px; overflow-y: auto;
+}
+.search-result-item {
+  padding: 10px 14px; cursor: pointer;
+  border-bottom: 1px solid var(--line);
+  transition: background .1s;
+}
+.search-result-item:hover { background: var(--paper-2); }
+.search-result-name { font-family: var(--f-body); font-size: 13px; color: var(--ink); line-height: 1.4; }
+.search-result-meta { font-family: var(--f-mono); font-size: 9px; color: var(--ink-soft); letter-spacing: 0.08em; margin-top: 2px; }
+.search-result-close {
+  padding: 6px 14px; text-align: right;
+  font-family: var(--f-mono); font-size: 9px; color: var(--ink-faint);
+  cursor: pointer; letter-spacing: 0.08em;
+}
+.search-result-close:hover { color: var(--accent); }
 .ai-note {
   font-family: var(--f-mono); font-size: 10px; color: var(--ink-soft);
   letter-spacing: 0.08em; margin-top: 12px;

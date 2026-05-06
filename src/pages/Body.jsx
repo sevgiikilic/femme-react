@@ -2,12 +2,35 @@ import { useState } from 'react';
 import { cycleInfo, PHASES, today, formatLong, addDays } from '../utils/cycle';
 import './Body.css';
 
+function getBloatInsight(state, date, bloatVal) {
+  if (bloatVal == null || bloatVal < 2) return null;
+
+  const prevDate   = addDays(date, -1);
+  const reactFoods = state.foods.filter(f => f.pref === 'react' || (f.issues && f.issues.length));
+  const recentMeals = state.meals.filter(m => m.date === date || m.date === prevDate);
+
+  const matched = reactFoods.filter(food =>
+    recentMeals.some(m => m.desc.toLowerCase().includes(food.name.toLowerCase()))
+  );
+
+  if (matched.length > 0) {
+    const names = matched.map(f => f.name).join(', ');
+    return `${names} tükettikten sonra şişkinlik oluşmuş olabilir — tepki listendeki yiyecekleri takip et.`;
+  }
+
+  const ci = cycleInfo(state, date);
+  if (ci?.phaseKey === 'luteal')    return 'Luteal fazda ödem birikmesi yaygındır — bu döngü kökenli olabilir.';
+  if (ci?.phaseKey === 'menstrual') return 'Adet döneminde şişkinlik artabilir — prostaglandinler etkilidir.';
+  return null;
+}
+
 export default function Body({ appState }) {
   const { state, update } = appState;
-  const [date, setDate]     = useState(today());
-  const [weight, setWeight] = useState('');
-  const [waist, setWaist]   = useState('');
-  const [bloat, setBloat]   = useState(null);
+  const [date, setDate]         = useState(today());
+  const [weight, setWeight]     = useState('');
+  const [waist, setWaist]       = useState('');
+  const [bloat, setBloat]       = useState(null);
+  const [insight, setInsight]   = useState(null);
 
   function saveBody() {
     if (!date) return;
@@ -21,6 +44,7 @@ export default function Body({ appState }) {
     }
     const newDays = { ...state.days, [date]: { ...(state.days[date] || {}), bloat } };
     update({ body: newBody, days: newDays });
+    setInsight(getBloatInsight(state, date, bloat));
     setWeight(''); setWaist(''); setBloat(null);
   }
 
@@ -94,6 +118,12 @@ export default function Body({ appState }) {
         <div className="mt-16">
           <button className="btn btn-primary" type="button" onClick={saveBody}>Ölçümü Kaydet</button>
         </div>
+        {insight && (
+          <div className="bloat-insight mt-16">
+            <span className="bloat-insight-icon">!</span>
+            {insight}
+          </div>
+        )}
       </div>
 
       <div className="section-head mt-36">

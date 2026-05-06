@@ -554,6 +554,8 @@ select.input {
 .toast::before { content: '★'; color: var(--gold); }
 .toast.error { border-color: var(--jazz-red); box-shadow: 4px 4px 0 var(--jazz-red); }
 .toast.error::before { content: '✕'; color: var(--jazz-red); }
+.toast.support { border-color: var(--crystal); box-shadow: 4px 4px 0 var(--crystal); text-transform: none; letter-spacing: 0.03em; }
+.toast.support::before { content: '♡'; color: var(--crystal); }
 
 /* ── placeholder ── */
 .page-coming {

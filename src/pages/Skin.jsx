@@ -8,10 +8,12 @@ const PROD_TYPES = ['Temizleyici','Tonik','Esans','Serum','Nemlendirici','Krem',
 
 export default function Skin({ appState }) {
   const { state, update } = appState;
-  const [prodName, setProdName] = useState('');
-  const [prodType, setProdType] = useState('Serum');
-  const [prodActive, setProdActive] = useState('');
-  const [searching, setSearching] = useState(false);
+  const [prodName, setProdName]         = useState('');
+  const [prodType, setProdType]         = useState('Serum');
+  const [prodActive, setProdActive]     = useState('');
+  const [searching, setSearching]       = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
+  const searchRef = useRef(null);
 
   const info  = cycleInfo(state);
   const phase = info ? PHASES[info.phaseKey] : null;
@@ -27,21 +29,28 @@ export default function Skin({ appState }) {
 
   async function searchProduct() {
     const n = prodName.trim();
-    if (!n || !state.aiUrl) return;
+    if (!n) return;
     setSearching(true);
+    setSearchResults([]);
     try {
-      const res = await aiCall({ task: 'search_product', name: n }, state.aiUrl);
-      if (res?.actives) setProdActive(res.actives);
-      if (res?.type) setProdType(res.type);
+      const res = await aiCall({ task: 'search_product', query: n }, state.aiUrl || undefined);
+      if (res?.results?.length) setSearchResults(res.results);
     } catch { /* ignore */ }
     setSearching(false);
+  }
+
+  function pickResult(r) {
+    setProdName(r.name);
+    setProdType(r.type || 'Serum');
+    setProdActive(r.actives || '');
+    setSearchResults([]);
   }
 
   function addProduct() {
     const n = prodName.trim();
     if (!n) return;
     update({ products: [...state.products, { name: n, type: prodType, active: prodActive }] });
-    setProdName(''); setProdActive('');
+    setProdName(''); setProdActive(''); setSearchResults([]);
   }
 
   function deleteProduct(i) {
@@ -112,15 +121,27 @@ export default function Skin({ appState }) {
       </div>
       <div className="card">
         <div className="form-row">
-          <div className="form-group" style={{ flex: 2, position: 'relative' }}>
+          <div className="form-group" style={{ flex: 2, position: 'relative' }} ref={searchRef}>
             <label className="form-label">Ürün Adı · yazınca AI ile aratılır</label>
             <input
               type="text" className="input" value={prodName}
               placeholder="ör. Some By Mi AHA-BHA-PHA Toner"
-              onChange={e => setProdName(e.target.value)}
-              onBlur={searchProduct}
+              onChange={e => { setProdName(e.target.value); setSearchResults([]); }}
+              onBlur={() => { if (!searchResults.length) searchProduct(); }}
+              onKeyDown={e => e.key === 'Enter' && searchProduct()}
             />
             {searching && <div className="search-hint">Aranıyor...</div>}
+            {searchResults.length > 0 && (
+              <div className="search-results">
+                {searchResults.map((r, i) => (
+                  <div key={i} className="search-result-item" onMouseDown={() => pickResult(r)}>
+                    <div className="search-result-name">{r.name}</div>
+                    <div className="search-result-meta">{r.type}{r.actives ? ` · ${r.actives}` : ''}</div>
+                  </div>
+                ))}
+                <div className="search-result-close" onMouseDown={() => setSearchResults([])}>kapat ×</div>
+              </div>
+            )}
           </div>
           <div className="form-group" style={{ maxWidth: 160 }}>
             <label className="form-label">Tip</label>
@@ -134,7 +155,7 @@ export default function Skin({ appState }) {
           </div>
           <button className="btn btn-primary" type="button" onClick={addProduct}>Ekle</button>
         </div>
-        <div className="ai-note">[ INCIDecoder &amp; AI ile ürün otomatik bulunur. AI bağlıysa daha iyi çalışır. ]</div>
+        <div className="ai-note">[ INCIDecoder &amp; AI ile ürün otomatik bulunur. ]</div>
       </div>
 
       {state.products.length > 0 && (
