@@ -137,13 +137,20 @@ export default function Chat({ appState }) {
     const isLogMsg    = LOG_RE.test(msg);
     const ctx         = buildContext(state);
 
-    try {
-      const chatPromise = aiCall({ task: 'chat', context: ctx, history: historyForAI }, effectiveUrl);
-      const logPromise  = isLogMsg
-        ? aiCall({ task: 'parse_daily_log', text: msg }, effectiveUrl)
-        : Promise.resolve(null);
+    // Parse runs in background — never blocks chat
+    if (isLogMsg) {
+      aiCall({ task: 'parse_daily_log', text: msg }, effectiveUrl)
+        .then(logRes => {
+          if (logRes && !logRes.error) {
+            const saved = applyLogToState(logRes, state, update, todayDate);
+            if (saved.length) appendChat({ role: 'saved', content: saved.join(' · ') });
+          }
+        })
+        .catch(() => null);
+    }
 
-      const [chatRes, logRes] = await Promise.all([chatPromise, logPromise]);
+    try {
+      const chatRes = await aiCall({ task: 'chat', context: ctx, history: historyForAI }, effectiveUrl);
       setTyping(false);
 
       if (chatRes?.reply) {
@@ -164,14 +171,6 @@ export default function Chat({ appState }) {
         }
       } else {
         appendChat({ role: 'system', content: 'Yanıt alınamadı.' });
-      }
-
-      // apply parsed log data
-      if (logRes && !logRes.error) {
-        const saved = applyLogToState(logRes, state, update, todayDate);
-        if (saved.length) {
-          appendChat({ role: 'saved', content: saved.join(' · ') });
-        }
       }
     } catch (e) {
       setTyping(false);

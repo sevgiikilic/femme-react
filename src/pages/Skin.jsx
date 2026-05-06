@@ -34,8 +34,16 @@ export default function Skin({ appState }) {
     setSearchResults([]);
     try {
       const res = await aiCall({ task: 'search_product', query: n }, state.aiUrl || undefined);
-      if (res?.results?.length) setSearchResults(res.results);
-    } catch { /* ignore */ }
+      if (res?.results?.length) {
+        setSearchResults(res.results);
+      } else {
+        // Show at least an inferred fallback so the user can continue
+        setSearchResults([{ name: n, type: 'Serum', actives: '' }]);
+      }
+    } catch {
+      // On network failure still show the typed name as option
+      setSearchResults([{ name: n, type: 'Serum', actives: '' }]);
+    }
     setSearching(false);
   }
 
@@ -122,15 +130,23 @@ export default function Skin({ appState }) {
       <div className="card">
         <div className="form-row">
           <div className="form-group" style={{ flex: 2, position: 'relative' }} ref={searchRef}>
-            <label className="form-label">Ürün Adı · yazınca AI ile aratılır</label>
-            <input
-              type="text" className="input" value={prodName}
-              placeholder="ör. Some By Mi AHA-BHA-PHA Toner"
-              onChange={e => { setProdName(e.target.value); setSearchResults([]); }}
-              onBlur={() => { if (!searchResults.length) searchProduct(); }}
-              onKeyDown={e => e.key === 'Enter' && searchProduct()}
-            />
-            {searching && <div className="search-hint">Aranıyor...</div>}
+            <label className="form-label">Ürün Adı · AI ile aratılır</label>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <input
+                type="text" className="input" value={prodName}
+                style={{ flex: 1 }}
+                placeholder="ör. Some By Mi AHA-BHA-PHA Toner"
+                onChange={e => { setProdName(e.target.value); setSearchResults([]); }}
+                onKeyDown={e => e.key === 'Enter' && searchProduct()}
+              />
+              <button
+                className="btn"
+                type="button"
+                onClick={searchProduct}
+                disabled={searching || !prodName.trim()}
+                style={{ flexShrink: 0, minWidth: 60 }}
+              >{searching ? '...' : 'Ara'}</button>
+            </div>
             {searchResults.length > 0 && (
               <div className="search-results">
                 {searchResults.map((r, i) => (
