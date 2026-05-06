@@ -1,0 +1,142 @@
+/* ── layout ── */
+.app {
+  position: relative; z-index: 2;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+}
+
+.main {
+  padding: 48px 60px 80px;
+  width: 100%; min-width: 0;
+  position: relative; z-index: 2;
+  animation: fade .3s ease;
+}
+
+.page-wrap { max-width: 1120px; }
+
+/* ── page header ── */
+.page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  padding-bottom: 24px;
+  margin-bottom: 44px;
+  border-bottom: 3px solid var(--ink);
+}
+
+.page-head-left { flex: 1; }
+
+.page-eyebrow {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.38em;
+  color: var(--accent);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.page-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 20px; height: 2px;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+.page-title {
+  font-family: var(--f-display);
+  font-size: 88px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 0.88;
+  color: var(--ink);
+  text-transform: uppercase;
+}
+
+.session-tag {
+  font-family: var(--f-mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.32em;
+  background: var(--accent);
+  color: var(--bg);
+  padding: 6px 14px;
+  box-shadow: 3px 3px 0 var(--line);
+  align-self: flex-end;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ── cards ── */
+.card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  box-shadow: 4px 4px 0 var(--line);
+  padding: 24px;
+}
+
+.card-label {
+  font-family: var(--f-mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.32em;
+  color: var(--ink-faint);
+  margin-bottom: 8px;
+}
+.card-value {
+  font-family: var(--f-display);
+  font-size: 52px;
+  line-height: 1;
+  color: var(--ink);
+}
+.card-sub {
+  font-family: var(--f-body);
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin-top: 6px;
+}
+.card-accent { color: var(--accent); }
+.card-gold   { color: var(--gold); }
+
+/* ── grids ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+
+/* ── accent bar ── */
+.accent-bar {
+  height: 4px;
+  background: var(--accent);
+  margin-bottom: 28px;
+}
+
+/* ── dividers ── */
+.section-title {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.32em;
+  color: var(--ink-faint);
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 16px;
+  margin-top: 36px;
+}
+.section-title:first-child { margin-top: 0; }
+
+/* ── placeholder ── */
+.page-coming {
+  margin-top: 48px;
+  padding: 32px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  box-shadow: 4px 4px 0 var(--line);
+  color: var(--ink-soft);
+  font-family: var(--f-mono);
+  font-size: 12px;
+  letter-spacing: 0.05em;
+}

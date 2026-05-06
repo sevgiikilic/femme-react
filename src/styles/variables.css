@@ -1,0 +1,104 @@
+@import url('https://fonts.googleapis.com/css2?family=VT323&family=DotGothic16&family=Bowlby+One&family=Space+Mono:wght@400;700&family=Zen+Dots&display=swap');
+
+/* ════ FEMME — Jazz Noir × Magical Girl ════ */
+
+:root, [data-theme="space"] {
+  --bg:        #0a0613;
+  --bg-2:      #14091f;
+  --paper:     #1a0d2b;
+  --paper-2:   #25143d;
+  --ink:       #fbeacb;
+  --ink-soft:  #c8b3da;
+  --ink-faint: #7d6a8f;
+  --line:      #4a3068;
+  --line-soft: #2c1d40;
+
+  --jazz-red:    #ff2e4d;
+  --jazz-yellow: #ffd23f;
+  --jazz-blue:   #2db4ff;
+  --jazz-orange: #ff6b1a;
+  --moon-pink:   #ff8fc4;
+  --moon-rose:   #ffb8d9;
+  --moon-lilac:  #c89aff;
+  --crystal:     #88f4e8;
+
+  --accent:   var(--jazz-red);
+  --accent-2: var(--moon-pink);
+  --gold:     var(--jazz-yellow);
+
+  --grain:    0.10;
+  --scan:     0.04;
+  --halftone: 0.06;
+
+  color-scheme: dark;
+}
+
+[data-theme="moon"] {
+  --bg:        #fde9f3;
+  --bg-2:      #f5d4e8;
+  --paper:     #fff5fa;
+  --paper-2:   #fce0ee;
+  --ink:       #2a1640;
+  --ink-soft:  #6b4d8a;
+  --ink-faint: #a989c4;
+  --line:      #e8b8d8;
+  --line-soft: #f5d4e8;
+
+  --jazz-red:    #ff3d6e;
+  --jazz-yellow: #ffd23f;
+  --jazz-blue:   #6dc5ff;
+  --jazz-orange: #ff8a3d;
+  --moon-pink:   #ff5e9c;
+  --moon-rose:   #ff8fc4;
+  --moon-lilac:  #b48aff;
+  --crystal:     #4ad4c4;
+
+  --accent:   var(--moon-pink);
+  --accent-2: var(--moon-lilac);
+  --gold:     #f0a830;
+
+  --grain:    0.05;
+  --scan:     0.02;
+  --halftone: 0.10;
+
+  color-scheme: light;
+}
+
+[data-theme="vinyl"] {
+  --bg:        #f0e3c8;
+  --bg-2:      #e2d2b0;
+  --paper:     #f7ecd0;
+  --paper-2:   #e8d8b4;
+  --ink:       #1a0f08;
+  --ink-soft:  #4a3525;
+  --ink-faint: #8a6f55;
+  --line:      #b89870;
+  --line-soft: #d4ba90;
+
+  --jazz-red:    #c41e3a;
+  --jazz-yellow: #d4a020;
+  --jazz-blue:   #2a6ba8;
+  --jazz-orange: #d65a18;
+  --moon-pink:   #d96ba0;
+  --moon-rose:   #e89ab8;
+  --moon-lilac:  #8a6db5;
+  --crystal:     #4a9088;
+
+  --accent:   var(--jazz-red);
+  --accent-2: var(--moon-pink);
+  --gold:     var(--jazz-yellow);
+
+  --grain:    0.07;
+  --scan:     0.015;
+  --halftone: 0.05;
+
+  color-scheme: light;
+}
+
+:root, [data-theme] {
+  --f-display: 'Bowlby One', 'Arial Black', sans-serif;
+  --f-pixel:   'VT323', 'Courier New', monospace;
+  --f-shoujo:  'Zen Dots', 'Bowlby One', sans-serif;
+  --f-mono:    'Space Mono', ui-monospace, monospace;
+  --f-body:    'DotGothic16', 'VT323', monospace;
+}
