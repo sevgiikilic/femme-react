@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { cycleInfo, PHASES, today } from '../utils/cycle';
-import { aiCall, buildContext, WORKER_URL } from '../hooks/useAI';
+import { aiCall, buildContext, WORKER_URL, getEffectiveUrl } from '../hooks/useAI';
 import './Chat.css';
 
 // Keywords that suggest a health log message (not a question)
@@ -98,7 +98,15 @@ export default function Chat({ appState }) {
   const msgsRef = useRef(null);
 
   const info         = cycleInfo(state);
-  const effectiveUrl = state.aiUrl || WORKER_URL;
+  const effectiveUrl = getEffectiveUrl(state.aiUrl);
+  const [connStatus, setConnStatus] = useState(null); // null | 'ok' | 'err'
+  const [connErr, setConnErr]       = useState('');
+
+  useEffect(() => {
+    aiCall({ task: 'ping' }, effectiveUrl)
+      .then(() => setConnStatus('ok'))
+      .catch(e => { setConnStatus('err'); setConnErr(e.message); });
+  }, [effectiveUrl]);
 
   const quickActions = [
     'Bugün nasıl hissettiğimi anlat',
@@ -174,7 +182,7 @@ export default function Chat({ appState }) {
       }
     } catch (e) {
       setTyping(false);
-      appendChat({ role: 'system', content: 'Hata: ' + e.message });
+      appendChat({ role: 'system', content: `Hata: ${e.message} · URL: ${effectiveUrl}` });
     }
   }
 
@@ -190,7 +198,13 @@ export default function Chat({ appState }) {
           <h1 className="page-title" data-en="CHAT">Sohbet</h1>
         </div>
         <div className="session-tag">
-          Backend <strong style={{ color: 'var(--crystal)' }}>aktif</strong>
+          {connStatus === null && 'Backend test ediliyor...'}
+          {connStatus === 'ok'  && <>Backend <strong style={{ color: 'var(--crystal)' }}>bağlı</strong></>}
+          {connStatus === 'err' && (
+            <span style={{ color: 'var(--jazz-red)', fontSize: '11px' }} title={connErr}>
+              Backend <strong>bağlanamadı</strong> · {connErr.slice(0, 30)}
+            </span>
+          )}
         </div>
       </div>
 
