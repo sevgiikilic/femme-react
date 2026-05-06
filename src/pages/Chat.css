@@ -91,3 +91,24 @@
 }
 .chat-send:hover { background: var(--ink); }
 .chat-send:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.chat-hint {
+  font-family: var(--f-mono); font-size: 10px; letter-spacing: 0.08em;
+  color: var(--ink-faint); text-transform: uppercase;
+  border-left: 3px solid var(--crystal); padding: 6px 10px;
+  margin-bottom: 4px;
+}
+
+.chat-msg-saved {
+  background: transparent;
+  border: 1.5px solid var(--crystal);
+  align-self: center; max-width: 90%;
+}
+.chat-saved-badge {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--f-mono); font-size: 11px;
+  color: var(--crystal); letter-spacing: 0.06em;
+}
+.chat-saved-icon {
+  font-size: 14px; font-weight: 700;
+}

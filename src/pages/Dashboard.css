@@ -62,6 +62,30 @@
   letter-spacing: 0.1em; text-transform: uppercase; margin-top: 6px;
 }
 
+/* ── MOTIVATION PANEL ── */
+.motivation-panel {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 16px 20px;
+  border: 2px solid var(--line);
+  border-left: 5px solid var(--accent);
+  background: var(--paper);
+  margin-top: 12px;
+}
+.motivation-low    { border-left-color: var(--crystal); }
+.motivation-high   { border-left-color: var(--gold); }
+.motivation-default { border-left-color: var(--accent); }
+.motivation-icon {
+  font-family: var(--f-mono); font-size: 20px; font-weight: 700;
+  color: var(--accent); flex-shrink: 0; margin-top: 1px; line-height: 1;
+}
+.motivation-low  .motivation-icon { color: var(--crystal); }
+.motivation-high .motivation-icon { color: var(--gold); }
+.motivation-text {
+  font-family: var(--f-body); font-size: 14px;
+  color: var(--ink-soft); line-height: 1.65;
+  font-style: italic;
+}
+
 /* ── QUICK LOG ── */
 .quick-log {
   margin-top: 16px;

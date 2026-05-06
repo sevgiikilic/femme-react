@@ -14,6 +14,7 @@ import Insights from './pages/Insights';
 import Chat from './pages/Chat';
 import Settings from './pages/Settings';
 import Sleep from './pages/Sleep';
+import Supplements from './pages/Supplements';
 import Sidebar from './components/Sidebar';
 import './styles/global.css';
 import './App.css';
@@ -34,7 +35,8 @@ export default function App() {
     symptoms:  <Symptoms  appState={appState} />,
     sleep:     <Sleep     appState={appState} />,
     body:      <Body      appState={appState} />,
-    meals:     <Meals     appState={appState} />,
+    meals:       <Meals       appState={appState} />,
+    supplements: <Supplements appState={appState} />,
     cycle:     <Cycle     appState={appState} />,
     food:      <Food      appState={appState} />,
     skin:      <Skin      appState={appState} />,

@@ -17,6 +17,8 @@ const DEFAULT = {
   chat: [],
   aiUrl: '',
   sleep: [],
+  supplements: [],
+  supSchedule: [],
 };
 
 function load() {

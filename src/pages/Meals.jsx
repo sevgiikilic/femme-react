@@ -19,15 +19,19 @@ export default function Meals({ appState }) {
     const d = desc.trim();
     if (!d) return;
     let calories = cal ? parseInt(cal) : 0;
+    let macros = {};
     if (!calories) {
       setLoading(true);
       try {
         const res = await aiCall({ task: 'estimate_calories', description: d }, state.aiUrl || undefined);
-        if (res?.calories) calories = res.calories;
+        if (res?.calories) {
+          calories = res.calories;
+          macros = { protein: res.protein, carbs: res.carbs, fat: res.fat, fiber: res.fiber };
+        }
       } catch { /* silently fail */ }
       setLoading(false);
     }
-    const meal = { date: today(), type, desc: d, cal: calories };
+    const meal = { date: today(), type, desc: d, cal: calories, ...macros };
     const newMeals = [...state.meals, meal].sort((a, b) => b.date.localeCompare(a.date));
     update({ meals: newMeals });
     setDesc(''); setCal('');
@@ -118,6 +122,13 @@ export default function Meals({ appState }) {
                   <span className="meal-type">{m.type}</span>
                   <div className="meal-desc">{m.desc}</div>
                   <div className="meal-cal">{m.cal || 0} kcal</div>
+                  {(m.protein || m.carbs || m.fat) && (
+                    <div className="meal-macros">
+                      {m.protein != null && <span className="macro-p">P {m.protein}g</span>}
+                      {m.carbs   != null && <span className="macro-c">K {m.carbs}g</span>}
+                      {m.fat     != null && <span className="macro-f">Y {m.fat}g</span>}
+                    </div>
+                  )}
                   <button className="micro-btn danger" type="button" onClick={() => deleteMeal(realIdx)}>Sil</button>
                 </div>
               );

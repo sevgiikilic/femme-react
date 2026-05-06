@@ -139,6 +139,40 @@ function computeTodayState(state, info, todayDate) {
   return { label, level, factors: factors.slice(0, 5) };
 }
 
+// ── Motivation Panel ─────────────────────────────────
+const MOTIVATIONS = {
+  low: {
+    menstrual:  'Bedenin şu an en çok bakıma muhtaç olduğu an — bunu bilmek zaten güçlü olmak.',
+    luteal:     'Luteal faz bu duyguları büyütüyor ama onlar gerçek — yavaşlamak da bir strateji.',
+    follicular: 'Bugün zorsa da bu geçiyor. Enerji her döngüde geri gelir.',
+    ovulation:  'Herkesin zor günleri olur — bu geçecek ve sen buradasın.',
+  },
+  mid: {
+    menstrual:  'Adet günleri güç gerektiriyor — bedenin çalışıyor, bu yeterli.',
+    luteal:     'Bu dönemi yavaş geçirmek de bir başarı — her şeyi zorlamana gerek yok.',
+    follicular: 'Enerji yükseliyor, bedenin hazırlanıyor — küçük adımlarla ilerle.',
+    ovulation:  'Enerjini nereye harcayacağına sen karar ver — bu netlik nadirdir.',
+  },
+  high: {
+    menstrual:  'Zor bir dönemde iyi hissedebilmek — bedenin sürpriz yapabiliyor.',
+    luteal:     'Bu dönemde iyi hissediyorsun — bazı döngüler tam da böyle.',
+    follicular: 'Yeni döngünün enerjisi sende açık — bu anı yakalamaya değer.',
+    ovulation:  'Enerjin zirvedeyken ne yaratmak istiyorsun? Kaçırma.',
+  },
+  default: {
+    menstrual:  'Bugün sadece varolmak yeterli — bedenine izin ver.',
+    luteal:     'İçe dönüklük bu dönemin bir parçası, zayıflık değil.',
+    follicular: 'Taze bir döngü başlıyor — ne hissediyorsun?',
+    ovulation:  'Bu dönemde doğan fikirler çok değerli — bir yere not et.',
+  },
+};
+
+function getMotivation(phaseKey, level) {
+  const lvl = level || 'default';
+  const ph  = phaseKey || 'follicular';
+  return MOTIVATIONS[lvl]?.[ph] || MOTIVATIONS.default[ph] || 'Bugün neler hissettirdi?';
+}
+
 // ── Dashboard ─────────────────────────────────────────
 export default function Dashboard({ appState }) {
   const { state, update } = appState;
@@ -219,7 +253,19 @@ export default function Dashboard({ appState }) {
         ) : (
           <div className="today-state-empty">
             <div className="today-state-empty-label">Bugün henüz veri yok</div>
-            <div className="today-state-empty-sub">Aşağıdan hızlı kayıt yap veya semptomlar sayfasını kullan</div>
+            <div className="today-state-empty-sub">Sohbet'e kilonu, uykunu, ne yediğini yaz — otomatik kaydeder</div>
+          </div>
+        )}
+
+        {/* Motivation Panel */}
+        {(info || todayState) && (
+          <div className={`motivation-panel motivation-${todayState?.level || 'default'}`}>
+            <div className="motivation-icon">
+              {todayState?.level === 'low' ? '♡' : todayState?.level === 'high' ? '★' : '◎'}
+            </div>
+            <div className="motivation-text">
+              {getMotivation(info?.phaseKey, todayState?.level)}
+            </div>
           </div>
         )}
 

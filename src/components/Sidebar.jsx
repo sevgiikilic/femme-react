@@ -4,20 +4,21 @@ const NAV = [
   { group: 'Günlük', items: [
     { id: 'dashboard', label: 'Bugün',         num: '01' },
     { id: 'symptoms',  label: 'Semptomlar',    num: '02' },
-    { id: 'sleep',     label: 'Uyku',          num: '03' },
-    { id: 'body',      label: 'Beden',         num: '04' },
-    { id: 'meals',     label: 'Yemek Günlüğü', num: '05' },
+    { id: 'sleep',       label: 'Uyku',          num: '03' },
+    { id: 'body',        label: 'Beden',         num: '04' },
+    { id: 'meals',       label: 'Yemek Günlüğü', num: '05' },
+    { id: 'supplements', label: 'Takviyeler',    num: '06' },
   ]},
   { group: 'Kütüphane', items: [
-    { id: 'cycle',    label: 'Döngü',           num: '06' },
-    { id: 'food',     label: 'Beslenme',        num: '07' },
-    { id: 'skin',     label: 'Cilt',            num: '08' },
-    { id: 'fitness',  label: 'Spor',            num: '09' },
+    { id: 'cycle',    label: 'Döngü',           num: '07' },
+    { id: 'food',     label: 'Beslenme',        num: '08' },
+    { id: 'skin',     label: 'Cilt',            num: '09' },
+    { id: 'fitness',  label: 'Spor',            num: '10' },
   ]},
   { group: 'İçgörüler', items: [
-    { id: 'insights', label: 'Öngörüler',       num: '10' },
-    { id: 'chat',     label: 'Sohbet',          num: '11' },
-    { id: 'settings', label: 'Ayarlar',         num: '12' },
+    { id: 'insights', label: 'Öngörüler',       num: '11' },
+    { id: 'chat',     label: 'Sohbet',          num: '12' },
+    { id: 'settings', label: 'Ayarlar',         num: '13' },
   ]},
 ];
 
