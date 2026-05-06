@@ -1,55 +1,75 @@
 import './Sidebar.css';
 
 const NAV = [
-  { group: 'Gunluk', items: [
+  { group: 'Günlük', items: [
     { id: 'dashboard', label: 'Bugün',         num: 'I'    },
     { id: 'symptoms',  label: 'Semptomlar',    num: 'II'   },
     { id: 'body',      label: 'Beden',         num: 'III'  },
-    { id: 'meals',     label: 'Yemek Gunlugu', num: 'IV'   },
+    { id: 'meals',     label: 'Yemek Günlüğü', num: 'IV'   },
   ]},
-  { group: 'Kutuphane', items: [
-    { id: 'cycle',    label: 'Dongu',          num: 'V'    },
-    { id: 'food',     label: 'Beslenme',       num: 'VI'   },
-    { id: 'skin',     label: 'Cilt',           num: 'VII'  },
-    { id: 'fitness',  label: 'Spor',           num: 'VIII' },
+  { group: 'Kütüphane', items: [
+    { id: 'cycle',    label: 'Döngü',           num: 'V'    },
+    { id: 'food',     label: 'Beslenme',        num: 'VI'   },
+    { id: 'skin',     label: 'Cilt',            num: 'VII'  },
+    { id: 'fitness',  label: 'Spor',            num: 'VIII' },
   ]},
-  { group: 'Icgorüler', items: [
-    { id: 'insights', label: 'Ongorüler',      num: 'IX'   },
-    { id: 'chat',     label: 'Sohbet',         num: 'X'    },
-    { id: 'settings', label: 'Ayarlar',        num: 'XI'   },
+  { group: 'İçgörüler', items: [
+    { id: 'insights', label: 'Öngörüler',       num: 'IX'   },
+    { id: 'chat',     label: 'Sohbet',          num: 'X'    },
+    { id: 'settings', label: 'Ayarlar',         num: 'XI'   },
   ]},
 ];
 
-const THEME_LABELS = { space: 'uzay', moon: 'ay', vinyl: 'vinil' };
-
-export default function Sidebar({ page, onNavigate, user, onLogout, theme, onCycleTheme }) {
+export default function Sidebar({ page, onNavigate, user, onLogout, theme, onThemeChange }) {
   return (
     <aside className="sidebar">
       {/* brand */}
       <div className="brand">
-        <div className="brand-mark">
-          <svg viewBox="0 0 28 28" fill="none">
-            <circle cx="14" cy="14" r="13" stroke="currentColor" strokeWidth="1.5"/>
-            <circle cx="14" cy="14" r="5" fill="currentColor" opacity="0.4"/>
-            <path d="M14 1v4M14 23v4M1 14h4M23 14h4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
-          </svg>
-          <span className="brand-logo">FEMME</span>
+        <div className="brand-stamp">FEMME</div>
+        <div className="brand-meta">
+          <span>cycle · mood · body · skin</span>
+          <strong>★ v3</strong>
         </div>
-        <div className="brand-tag">cycle · mood · body · skin</div>
-        {user && <div className="brand-subtag">{user.name || user.email}</div>}
+        <div className="brand-tag-row">
+          <span className="brand-tag">SESSION LOG</span>
+          <div className="brand-moon">
+            <svg viewBox="0 0 18 18" fill="none">
+              <path d="M9 1a8 8 0 1 0 7 11.5A6 6 0 0 1 9 1z" fill="currentColor" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
+            </svg>
+          </div>
+        </div>
       </div>
 
-      {/* theme cycler */}
-      <button className="theme-cycler" onClick={onCycleTheme} type="button">
-        <div className="theme-dot" />
-        tema: {THEME_LABELS[theme] || theme}
-      </button>
+      {/* theme row */}
+      <div className="theme-row">
+        <button
+          className={`theme-btn${theme === 'space' ? ' active' : ''}`}
+          onClick={() => onThemeChange('space')}
+          type="button"
+        >
+          uzay
+        </button>
+        <button
+          className={`theme-btn${theme === 'moon' ? ' active' : ''}`}
+          onClick={() => onThemeChange('moon')}
+          type="button"
+        >
+          ay
+        </button>
+        <button
+          className={`theme-btn${theme === 'vinyl' ? ' active' : ''}`}
+          onClick={() => onThemeChange('vinyl')}
+          type="button"
+        >
+          vinil
+        </button>
+      </div>
 
-      {/* nav */}
-      <nav className="nav">
-        {NAV.map(group => (
-          <div className="nav-group" key={group.group}>
-            <div className="nav-label">{group.group}</div>
+      {/* nav groups */}
+      {NAV.map(group => (
+        <div key={group.group}>
+          <div className="nav-label"><span>{group.group}</span></div>
+          <nav className="nav">
             {group.items.map(item => (
               <button
                 key={item.id}
@@ -59,20 +79,25 @@ export default function Sidebar({ page, onNavigate, user, onLogout, theme, onCyc
               >
                 <span className="nav-num">{item.num}</span>
                 {item.label}
+                <span className="nav-glyph">→</span>
               </button>
             ))}
-          </div>
-        ))}
-      </nav>
+          </nav>
+        </div>
+      ))}
 
       {/* footer */}
       <div className="sidebar-foot">
-        <div className="sidebar-foot-info">
-          <span>femme v3</span>
-          {user && <span>{user.email}</span>}
-        </div>
-        <button className="logout-btn" onClick={onLogout} type="button">
-          Cikis Yap →
+        <span className="pulse" />
+        femme session log
+        {user && <> · <span>{user.email || user.name}</span></>}
+        <br />
+        <button
+          style={{ background:'none', border:'none', color:'inherit', cursor:'pointer', fontFamily:'inherit', fontSize:'inherit', letterSpacing:'inherit', textTransform:'inherit', marginTop:'6px', padding:0 }}
+          onClick={onLogout}
+          type="button"
+        >
+          çıkış →
         </button>
       </div>
     </aside>

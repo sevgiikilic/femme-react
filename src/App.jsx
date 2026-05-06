@@ -8,31 +8,31 @@ import './App.css';
 const THEMES = ['space', 'moon', 'vinyl'];
 
 const PAGES = {
-  dashboard: () => <PlaceholderPage title="Bugun"          eyebrow="Session I"    />,
-  symptoms:  () => <PlaceholderPage title="Semptomlar"     eyebrow="Session II"   />,
-  body:      () => <PlaceholderPage title="Beden"          eyebrow="Session III"  />,
-  meals:     () => <PlaceholderPage title="Yemek Gunlugu"  eyebrow="Session IV"   />,
-  cycle:     () => <PlaceholderPage title="Dongu"          eyebrow="Session V"    />,
-  food:      () => <PlaceholderPage title="Beslenme"       eyebrow="Session VI"   />,
-  skin:      () => <PlaceholderPage title="Cilt"           eyebrow="Session VII"  />,
-  fitness:   () => <PlaceholderPage title="Spor"           eyebrow="Session VIII" />,
-  insights:  () => <PlaceholderPage title="Ongorüler"      eyebrow="Session IX"   />,
-  chat:      () => <PlaceholderPage title="Sohbet"         eyebrow="Session X"    />,
-  settings:  () => <PlaceholderPage title="Ayarlar"        eyebrow="Session XI"   />,
+  dashboard: () => <PlaceholderPage title="Bugün"          titleEn="TODAY"    eyebrow="Session I"    />,
+  symptoms:  () => <PlaceholderPage title="Semptomlar"     titleEn="SYMPTOMS" eyebrow="Session II"   />,
+  body:      () => <PlaceholderPage title="Beden"          titleEn="BODY"     eyebrow="Session III"  />,
+  meals:     () => <PlaceholderPage title="Yemek Günlüğü"  titleEn="MEALS"    eyebrow="Session IV"   />,
+  cycle:     () => <PlaceholderPage title="Döngü"          titleEn="CYCLE"    eyebrow="Session V"    />,
+  food:      () => <PlaceholderPage title="Beslenme"       titleEn="FOOD"     eyebrow="Session VI"   />,
+  skin:      () => <PlaceholderPage title="Cilt"           titleEn="SKIN"     eyebrow="Session VII"  />,
+  fitness:   () => <PlaceholderPage title="Spor"           titleEn="FITNESS"  eyebrow="Session VIII" />,
+  insights:  () => <PlaceholderPage title="Öngörüler"      titleEn="INSIGHTS" eyebrow="Session IX"   />,
+  chat:      () => <PlaceholderPage title="Sohbet"         titleEn="CHAT"     eyebrow="Session X"    />,
+  settings:  () => <PlaceholderPage title="Ayarlar"        titleEn="SETTINGS" eyebrow="Session XI"   />,
 };
 
-function PlaceholderPage({ title, eyebrow }) {
+function PlaceholderPage({ title, titleEn, eyebrow }) {
   return (
     <div className="page-wrap">
       <div className="page-head">
         <div className="page-head-left">
           <div className="page-eyebrow">{eyebrow}</div>
-          <h1 className="page-title">{title}</h1>
+          <h1 className="page-title" data-en={titleEn}>{title}</h1>
         </div>
         <div className="session-tag">{eyebrow}</div>
       </div>
       <div className="page-coming">
-        Bu sayfa henuz tasiniyor — bir sonraki oturumda doldurulacak.
+        Bu sayfa henüz taşınıyor — bir sonraki oturumda doldurulacak.
       </div>
     </div>
   );
@@ -48,29 +48,22 @@ export default function App() {
     localStorage.setItem('femme_theme', theme);
   }, [theme]);
 
-  const cycleTheme = () => setTheme(t => {
-    const idx = THEMES.indexOf(t);
-    return THEMES[(idx + 1) % THEMES.length];
-  });
-
   const PageComponent = PAGES[page] || PAGES.dashboard;
 
-  const nebulas = (
-    <>
-      <div className="nebula nebula-1" />
-      <div className="nebula nebula-2" />
-      <div className="nebula nebula-3" />
-      <div className="nebula nebula-4" />
-    </>
-  );
-
   if (!auth.isLoggedIn) {
-    return <>{nebulas}<Login auth={auth} /></>;
+    return (
+      <>
+        <div className="halftone" />
+        <div className="stars" />
+        <Login auth={auth} />
+      </>
+    );
   }
 
   return (
     <>
-      {nebulas}
+      <div className="halftone" />
+      <div className="stars" />
       <div className="app">
         <Sidebar
           page={page}
@@ -78,7 +71,7 @@ export default function App() {
           user={auth.user}
           onLogout={auth.logout}
           theme={theme}
-          onCycleTheme={cycleTheme}
+          onThemeChange={setTheme}
         />
         <main className="main" key={page}>
           <PageComponent />

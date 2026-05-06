@@ -8,8 +8,8 @@
 /* Jazz Noir card — LP record inner-sleeve style */
 .login-card {
   background: var(--paper);
-  border: 1px solid var(--line);
-  box-shadow: 8px 8px 0 var(--line);
+  border: 3px solid var(--ink);
+  box-shadow: 8px 8px 0 var(--accent);
   padding: 52px 44px;
   width: 100%; max-width: 400px;
   text-align: center;
@@ -64,42 +64,46 @@
 .login-form { display: flex; flex-direction: column; gap: 0; }
 
 .login-input {
-  background: var(--bg-2);
-  border: 1px solid var(--line);
+  background: var(--bg);
+  border: 2px solid var(--ink);
   color: var(--ink);
   padding: 13px 16px;
   font-family: var(--f-body);
   font-size: 15px;
   width: 100%;
-  transition: border-color .15s, box-shadow .15s;
+  transition: border-color .12s, box-shadow .12s;
   margin-bottom: 12px;
   box-shadow: 3px 3px 0 var(--line);
 }
 .login-input:focus {
   border-color: var(--accent);
   box-shadow: 3px 3px 0 var(--accent);
+  outline: none;
 }
 .login-input::placeholder { color: var(--ink-faint); }
 
 .login-btn {
   background: var(--accent);
-  color: var(--bg);
-  border: 1px solid var(--accent);
+  color: var(--paper);
+  border: 2px solid var(--ink);
   padding: 14px;
   font-family: var(--f-mono);
   font-size: 10px;
+  font-weight: 700;
   letter-spacing: 0.28em;
   text-transform: uppercase;
   width: 100%;
-  box-shadow: 4px 4px 0 var(--line);
+  box-shadow: 4px 4px 0 var(--ink);
   transition: box-shadow .1s, transform .1s;
   margin-top: 4px;
 }
+[data-theme="space"] .login-btn { color: #fff; }
 .login-btn:hover:not(:disabled) {
-  box-shadow: 5px 5px 0 var(--ink);
+  box-shadow: 6px 6px 0 var(--ink);
+  transform: translate(-1px, -1px);
 }
 .login-btn:active:not(:disabled) {
-  box-shadow: 1px 1px 0 var(--line);
+  box-shadow: 1px 1px 0 var(--ink);
   transform: translate(3px, 3px);
 }
 .login-btn:disabled { opacity: 0.35; cursor: not-allowed; }
@@ -139,17 +143,18 @@
   text-align: center;
   font-family: var(--f-pixel);
   font-size: 32px;
-  background: var(--bg-2);
-  border: 1px solid var(--line);
+  background: var(--bg);
+  border: 2px solid var(--ink);
   color: var(--ink);
-  transition: border-color .15s, box-shadow .15s;
+  transition: border-color .12s, box-shadow .12s;
   caret-color: var(--accent);
   box-shadow: 2px 2px 0 var(--line);
   line-height: 60px;
 }
 .pin-cell:focus {
   border-color: var(--accent);
-  box-shadow: 2px 2px 0 var(--accent);
+  box-shadow: 3px 3px 0 var(--accent);
+  outline: none;
 }
 .pin-cell.filled {
   border-color: var(--accent);
