@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { today } from '../utils/cycle';
-import { aiCall, WORKER_URL } from '../hooks/useAI';
+import { aiCall, WORKER_URL, getEffectiveUrl } from '../hooks/useAI';
 import './Settings.css';
 
 const KEY = 'femme_v3';
@@ -82,17 +82,26 @@ export default function Settings({ appState, onLogout }) {
         <div className="settings-row">
           <div>
             <div className="settings-title">AI Backend URL</div>
-            <div className="settings-desc">Boş bırakırsan varsayılan worker kullanılır. Özel worker kullanmak istersen URL'ini gir.</div>
+            <div className="settings-desc">
+              Boş bırakırsan varsayılan worker kullanılır.
+              <br />
+              <span style={{ fontFamily: 'var(--f-mono)', fontSize: '10px', color: 'var(--crystal)' }}>
+                Aktif: {getEffectiveUrl(state.aiUrl)}
+              </span>
+            </div>
           </div>
           <span className="ai-status" style={{ color: 'var(--crystal)' }}>aktif</span>
         </div>
         <input
           type="text" className="input mt-16" value={aiUrl}
-          placeholder="https://femme-ai.swq-bms.workers.dev"
+          placeholder={WORKER_URL}
           onChange={e => setAiUrl(e.target.value)}
-          onBlur={saveAiUrl}
         />
         <div className="settings-actions mt-12">
+          <button className="btn btn-sm btn-primary" type="button" onClick={saveAiUrl}>Kaydet</button>
+          <button className="btn btn-sm" type="button" onClick={() => { update({ aiUrl: '' }); setAiUrl(''); setAiStatus(''); }}>
+            Varsayılana Sıfırla
+          </button>
           <button className="btn btn-sm" type="button" onClick={testAi}>Bağlantıyı Test Et</button>
           {aiStatus && <span className="ai-status">{aiStatus}</span>}
         </div>

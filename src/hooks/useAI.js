@@ -1,9 +1,21 @@
 import { cycleInfo, today, PHASES } from '../utils/cycle';
 
-export const WORKER_URL = import.meta.env.VITE_WORKER_URL || 'https://femme-ai.swq-bms.workers.dev';
+export const WORKER_URL = 'https://femme-ai.swq-bms.workers.dev';
+
+// Reject http:// URLs when page is https (mixed content) and catch obviously wrong URLs
+function resolveUrl(aiUrl) {
+  if (!aiUrl || typeof aiUrl !== 'string') return WORKER_URL;
+  const trimmed = aiUrl.trim();
+  if (!trimmed) return WORKER_URL;
+  // Block mixed content (https page → http url)
+  if (trimmed.startsWith('http://')) return WORKER_URL;
+  // Must look like a valid URL
+  if (!trimmed.startsWith('https://')) return WORKER_URL;
+  return trimmed;
+}
 
 export async function aiCall(body, aiUrl) {
-  const url = aiUrl || WORKER_URL;
+  const url = resolveUrl(aiUrl);
   const res = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -11,6 +23,10 @@ export async function aiCall(body, aiUrl) {
   });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
+}
+
+export function getEffectiveUrl(aiUrl) {
+  return resolveUrl(aiUrl);
 }
 
 export function buildContext(state) {

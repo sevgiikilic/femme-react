@@ -43,6 +43,11 @@
   cursor: pointer; letter-spacing: 0.08em;
 }
 .search-result-close:hover { color: var(--accent); }
+.search-result-phase {
+  font-family: var(--f-mono); font-size: 9px; font-weight: 700;
+  color: var(--crystal); letter-spacing: 0.08em; margin-top: 3px;
+  text-transform: uppercase;
+}
 .ai-note {
   font-family: var(--f-mono); font-size: 10px; color: var(--ink-soft);
   letter-spacing: 0.08em; margin-top: 12px;

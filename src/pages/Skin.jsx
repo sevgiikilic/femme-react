@@ -47,18 +47,26 @@ export default function Skin({ appState }) {
     setSearching(false);
   }
 
+  const [pickedProduct, setPickedProduct] = useState(null);
+
   function pickResult(r) {
     setProdName(r.name);
     setProdType(r.type || 'Serum');
     setProdActive(r.actives || '');
+    setPickedProduct(r);
     setSearchResults([]);
   }
 
   function addProduct() {
     const n = prodName.trim();
     if (!n) return;
-    update({ products: [...state.products, { name: n, type: prodType, active: prodActive }] });
-    setProdName(''); setProdActive(''); setSearchResults([]);
+    const entry = {
+      name: n, type: prodType, active: prodActive,
+      phases:      pickedProduct?.phases      || null,
+      ingredients: pickedProduct?.ingredients || [],
+    };
+    update({ products: [...state.products, entry] });
+    setProdName(''); setProdActive(''); setSearchResults([]); setPickedProduct(null);
   }
 
   function deleteProduct(i) {
@@ -149,12 +157,22 @@ export default function Skin({ appState }) {
             </div>
             {searchResults.length > 0 && (
               <div className="search-results">
-                {searchResults.map((r, i) => (
-                  <div key={i} className="search-result-item" onMouseDown={() => pickResult(r)}>
-                    <div className="search-result-name">{r.name}</div>
-                    <div className="search-result-meta">{r.type}{r.actives ? ` · ${r.actives}` : ''}</div>
-                  </div>
-                ))}
+                {searchResults.map((r, i) => {
+                  const phaseNote = phase && r.phases ? r.phases[info?.phaseKey] : null;
+                  return (
+                    <div key={i} className="search-result-item" onMouseDown={() => pickResult(r)}>
+                      <div className="search-result-name">{r.name}</div>
+                      <div className="search-result-meta">
+                        {r.type}{r.actives ? ` · ${r.actives}` : ''}
+                      </div>
+                      {phaseNote && (
+                        <div className="search-result-phase">
+                          {phase.name}: {phaseNote}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
                 <div className="search-result-close" onMouseDown={() => setSearchResults([])}>kapat ×</div>
               </div>
             )}
