@@ -19,10 +19,10 @@ export default function Meals({ appState }) {
     const d = desc.trim();
     if (!d) return;
     let calories = cal ? parseInt(cal) : 0;
-    if (!calories && state.aiUrl) {
+    if (!calories) {
       setLoading(true);
       try {
-        const res = await aiCall({ task: 'estimate_calories', description: d }, state.aiUrl);
+        const res = await aiCall({ task: 'estimate_calories', description: d }, state.aiUrl || undefined);
         if (res?.calories) calories = res.calories;
       } catch { /* silently fail */ }
       setLoading(false);
@@ -59,7 +59,7 @@ export default function Meals({ appState }) {
       <div className="card">
         <div className="card-label">
           <span>Ne yedin?</span>
-          <span>{state.aiUrl ? 'AI kalori tahmin eder' : 'AI bağlı değil'}</span>
+          <span>AI kalori tahmin eder</span>
         </div>
         <div className="form-row">
           <div className="form-group" style={{ flex: 2 }}>

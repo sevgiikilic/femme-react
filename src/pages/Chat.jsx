@@ -1,15 +1,16 @@
 import { useState, useRef, useEffect } from 'react';
 import { cycleInfo, PHASES, today } from '../utils/cycle';
-import { aiCall, buildContext } from '../hooks/useAI';
+import { aiCall, buildContext, WORKER_URL } from '../hooks/useAI';
 import './Chat.css';
 
 export default function Chat({ appState }) {
-  const { state, update } = appState;
-  const [input, setInput] = useState('');
+  const { state, update, appendChat } = appState;
+  const [input, setInput]   = useState('');
   const [typing, setTyping] = useState(false);
   const msgsRef = useRef(null);
 
-  const info = cycleInfo(state);
+  const info       = cycleInfo(state);
+  const effectiveUrl = state.aiUrl || WORKER_URL;
 
   const quickActions = [
     'Bugün ne yemeliyim?',
@@ -23,48 +24,51 @@ export default function Chat({ appState }) {
   }, [state.chat, typing]);
 
   useEffect(() => {
-    if (!state.chat.length) {
-      const welcome = state.aiUrl
-        ? 'Femme aktif. Yemek tarif et kalori tahmin edeyim, faz hakkında soru sor, ya da bugün nasıl hissettiğini paylaş.'
-        : 'AI henüz aktif değil. Ayarlar > AI Backend URL kısmına Cloudflare Worker URL\'ini gir.';
-      update({ chat: [{ role: 'system', content: welcome }] });
+    if (!state.chat || !state.chat.length) {
+      appendChat({
+        role: 'system',
+        content: 'Femme aktif. Yemek tarif et kalori tahmin edeyim, faz hakkında soru sor, ya da bugün nasıl hissettiğini paylaş.',
+      });
     }
   }, []);
 
   async function send(text) {
     const msg = (text || input).trim();
-    if (!msg) return;
-    if (!state.aiUrl) {
-      addMsg('system', 'AI aktif değil. Ayarlar bölümünden URL ekle.');
-      return;
-    }
+    if (!msg || typing) return;
     setInput('');
-    addMsg('user', msg);
+
+    // history built BEFORE appending user message (includes new msg at end)
+    const historyForAI = [
+      ...(state.chat || []).filter(m => m.role !== 'system').slice(-9),
+      { role: 'user', content: msg },
+    ];
+
+    appendChat({ role: 'user', content: msg });
     setTyping(true);
 
     try {
       const ctx = buildContext(state);
-      const history = state.chat.filter(m => m.role !== 'system').slice(-10);
-      const res = await aiCall({ task: 'chat', context: ctx, history, message: msg }, state.aiUrl);
+      const res = await aiCall({ task: 'chat', context: ctx, history: historyForAI }, effectiveUrl);
       setTyping(false);
+
       if (res?.reply) {
-        addMsg('assistant', res.reply);
+        appendChat({ role: 'assistant', content: res.reply });
         if (res.meal && typeof res.meal.calories === 'number') {
-          const meal = { date: today(), type: res.meal.type || 'Atıştırmalık', desc: res.meal.description || msg, cal: res.meal.calories };
+          const meal = {
+            date: today(),
+            type: res.meal.type || 'Atıştırmalık',
+            desc: res.meal.description || msg,
+            cal: res.meal.calories,
+          };
           update({ meals: [...state.meals, meal].sort((a, b) => b.date.localeCompare(a.date)) });
         }
       } else {
-        addMsg('system', 'Yanıt alınamadı.');
+        appendChat({ role: 'system', content: 'Yanıt alınamadı.' });
       }
     } catch (e) {
       setTyping(false);
-      addMsg('system', 'Hata: ' + e.message);
+      appendChat({ role: 'system', content: 'Hata: ' + e.message });
     }
-  }
-
-  function addMsg(role, content) {
-    const chat = [...state.chat, { role, content }].slice(-40);
-    update({ chat });
   }
 
   function clearChat() {
@@ -79,19 +83,17 @@ export default function Chat({ appState }) {
           <h1 className="page-title" data-en="CHAT">Sohbet</h1>
         </div>
         <div className="session-tag">
-          Backend <strong style={{ color: state.aiUrl ? 'var(--crystal)' : 'var(--ink-faint)' }}>
-            {state.aiUrl ? 'aktif' : 'pasif'}
-          </strong>
+          Backend <strong style={{ color: 'var(--crystal)' }}>aktif</strong>
         </div>
       </div>
 
       <div className="chat-container">
         <div className="chat-msgs" ref={msgsRef}>
-          {state.chat.map((m, i) => (
+          {(state.chat || []).map((m, i) => (
             <div key={i} className={`chat-msg chat-msg-${m.role}`}>
               {m.role === 'assistant' && <div className="chat-from">FEMME</div>}
               {m.role === 'user'      && <div className="chat-from">Sen</div>}
-              {m.content.split('\n').map((line, j) => <div key={j}>{line}</div>)}
+              {m.content.split('\n').map((line, j) => <div key={j}>{line || ' '}</div>)}
             </div>
           ))}
           {typing && <div className="chat-typing">. . . yazıyor . . .</div>}

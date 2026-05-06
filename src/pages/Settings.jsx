@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { today } from '../utils/cycle';
-import { aiCall } from '../hooks/useAI';
+import { aiCall, WORKER_URL } from '../hooks/useAI';
 import './Settings.css';
 
 const KEY = 'femme_v3';
@@ -18,10 +18,10 @@ export default function Settings({ appState, onLogout }) {
   }
 
   async function testAi() {
-    if (!aiUrl.trim()) { setAiStatus('[ önce URL gir ]'); return; }
+    const url = aiUrl.trim() || WORKER_URL;
     setAiStatus('[ test ediliyor... ]');
     try {
-      const res = await aiCall({ task: 'ping' }, aiUrl.trim());
+      const res = await aiCall({ task: 'ping' }, url);
       setAiStatus(res?.ok ? '[ bağlandı ]' : '[ yanıt yok ]');
     } catch (e) {
       setAiStatus(`[ × ${e.message} ]`);
@@ -82,8 +82,9 @@ export default function Settings({ appState, onLogout }) {
         <div className="settings-row">
           <div>
             <div className="settings-title">AI Backend URL</div>
-            <div className="settings-desc">Cloudflare Worker URL'in. Boşsa AI özellikleri devre dışı.</div>
+            <div className="settings-desc">Boş bırakırsan varsayılan worker kullanılır. Özel worker kullanmak istersen URL'ini gir.</div>
           </div>
+          <span className="ai-status" style={{ color: 'var(--crystal)' }}>aktif</span>
         </div>
         <input
           type="text" className="input mt-16" value={aiUrl}

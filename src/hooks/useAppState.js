@@ -44,5 +44,14 @@ export function useAppState() {
     });
   }, []);
 
-  return { state, update, save };
+  const appendChat = useCallback((msg) => {
+    setState(prev => {
+      const chat = [...(prev.chat || []), msg].slice(-40);
+      const next = { ...prev, chat };
+      localStorage.setItem(KEY, JSON.stringify(next));
+      return next;
+    });
+  }, []);
+
+  return { state, update, save, appendChat };
 }

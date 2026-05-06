@@ -1,9 +1,9 @@
 import { cycleInfo, today, PHASES } from '../utils/cycle';
 
-const WORKER = import.meta.env.VITE_WORKER_URL || 'https://femme-ai.swq-bms.workers.dev';
+export const WORKER_URL = import.meta.env.VITE_WORKER_URL || 'https://femme-ai.swq-bms.workers.dev';
 
 export async function aiCall(body, aiUrl) {
-  const url = aiUrl || WORKER;
+  const url = aiUrl || WORKER_URL;
   const res = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
