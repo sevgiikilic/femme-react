@@ -132,31 +132,3 @@
 }
 .login-back:hover { color: var(--accent); }
 
-/* ── PIN grid ── */
-.pin-row {
-  display: flex; gap: 8px;
-  justify-content: center;
-  margin-bottom: 20px;
-}
-.pin-cell {
-  width: 48px; height: 60px;
-  text-align: center;
-  font-family: var(--f-pixel);
-  font-size: 32px;
-  background: var(--bg);
-  border: 2px solid var(--ink);
-  color: var(--ink);
-  transition: border-color .12s, box-shadow .12s;
-  caret-color: var(--accent);
-  box-shadow: 2px 2px 0 var(--line);
-  line-height: 60px;
-}
-.pin-cell:focus {
-  border-color: var(--accent);
-  box-shadow: 3px 3px 0 var(--accent);
-  outline: none;
-}
-.pin-cell.filled {
-  border-color: var(--accent);
-  background: var(--paper-2);
-}
