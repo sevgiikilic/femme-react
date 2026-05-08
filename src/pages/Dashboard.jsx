@@ -38,7 +38,7 @@ function CycleRing({ day, total, phase }) {
 }
 
 // ── Onboarding Modal ──────────────────────────────────
-function OnboardModal({ onComplete }) {
+function OnboardModal({ onComplete, onSkip }) {
   const [last, setLast]     = useState(today());
   const [cycle, setCycle]   = useState('28');
   const [period, setPeriod] = useState('5');
@@ -54,12 +54,12 @@ function OnboardModal({ onComplete }) {
       <div className="onboard-modal">
         <div className="onboard-head">
           <span>Femme — İlk Kurulum</span>
-          <span>★</span>
+          <button className="onboard-close" type="button" onClick={onSkip} title="Şimdilik atla">✕</button>
         </div>
         <div className="onboard-body">
           <div className="onboard-title">Merhaba,</div>
           <p style={{ fontFamily: 'var(--f-body)', fontSize: '14px', color: 'var(--ink-soft)', marginBottom: '24px', lineHeight: '1.6' }}>
-            Döngünü takip etmek için birkaç bilgiye ihtiyacım var.
+            Döngünü takip etmek için birkaç bilgiye ihtiyacım var. İstersen şimdilik atlayıp sonra ekleyebilirsin.
           </p>
           <form onSubmit={handleSubmit}>
             <div className="form-group">
@@ -78,6 +78,12 @@ function OnboardModal({ onComplete }) {
             </div>
             <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '8px' }}>Başla →</button>
           </form>
+          <button type="button" className="btn btn-ghost mt-12" style={{ width: '100%' }} onClick={onSkip}>
+            Döngü bilgisi olmadan başla →
+          </button>
+          <p style={{ fontFamily: 'var(--f-mono)', fontSize: '9px', color: 'var(--ink-faint)', marginTop: '10px', textAlign: 'center', letterSpacing: '0.08em', lineHeight: '1.6' }}>
+            DÖNGÜ BAZLI ÖNERİLER VE FAZ TAKİBİ DÖNGÜ VERİSİ GEREKTİRİR. AYARLAR'DAN SONRA EKLEYEBİLİRSİN.
+          </p>
         </div>
       </div>
     </div>
@@ -181,6 +187,10 @@ export default function Dashboard({ appState }) {
     update({ setup: true, avgCycle: cycle, avgPeriod: period, periods: [{ start: last, length: period, flow: 'orta' }] });
   }
 
+  function handleSkipOnboard() {
+    update({ setup: true });
+  }
+
   const info      = cycleInfo(state);
   const phase     = info ? PHASES[info.phaseKey] : null;
   const todayDate = today();
@@ -221,7 +231,17 @@ export default function Dashboard({ appState }) {
 
   return (
     <>
-      {!state.setup && <OnboardModal onComplete={handleOnboard} />}
+      {!state.setup && <OnboardModal onComplete={handleOnboard} onSkip={handleSkipOnboard} />}
+
+      {/* Info banner when setup was skipped without cycle data */}
+      {state.setup && !state.periods?.length && (
+        <div className="cycle-missing-banner">
+          <span>Döngü verisi girilmedi — faz takibi ve döngü bazlı öneriler devre dışı.</span>
+          <button type="button" onClick={() => update({ setup: false })}>
+            Döngü ekle →
+          </button>
+        </div>
+      )}
 
       <div className="page-wrap">
         <div className="page-head">

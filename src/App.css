@@ -602,6 +602,30 @@ select.input {
 .text-mono   { font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.12em; }
 .text-pixel  { font-family: var(--f-pixel); }
 
+/* ── hamburger toggle ── */
+.nav-toggle {
+  display: none;
+  position: fixed; top: 14px; left: 14px;
+  z-index: 600;
+  width: 44px; height: 44px;
+  background: var(--paper);
+  border: 3px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--accent);
+  color: var(--ink);
+  font-size: 20px; line-height: 1;
+  cursor: pointer;
+  align-items: center; justify-content: center;
+  transition: box-shadow .12s;
+}
+.nav-toggle:hover { box-shadow: 4px 4px 0 var(--accent); }
+
+.nav-backdrop {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.65);
+  z-index: 490;
+}
+
 /* ── responsive ── */
 @media (max-width: 1100px) {
   .main { padding: 36px 40px 60px; }
@@ -610,10 +634,36 @@ select.input {
 }
 @media (max-width: 820px) {
   .app { grid-template-columns: 1fr; }
-  .main { padding: 24px 20px 60px; }
-  .page-title { font-size: 56px; }
+  .nav-toggle { display: flex; }
+  .nav-backdrop { display: block; }
+  .main { padding: 72px 16px 80px; }
+  .page-title { font-size: 52px; }
+  .page-head { padding: 20px 20px 18px; }
+  .grid-2 { grid-template-columns: 1fr; }
   .grid-3 { grid-template-columns: 1fr 1fr; }
   .grid-4 { grid-template-columns: 1fr 1fr; }
   .split-banner { grid-template-columns: 1fr; }
-  .split-banner-half { border-right: none; border-bottom: 2px solid var(--ink); }
+  .split-banner-half,
+  .split-banner-left,
+  .split-banner-right { border-right: none; border-bottom: 2px solid var(--ink); }
+  .form-row { flex-direction: column; }
+  .form-row .btn { width: 100%; justify-content: center; }
+  .data-table { font-size: 12px; }
+  .data-table th, .data-table td { padding: 6px 8px; }
+}
+@media (max-width: 480px) {
+  .page-title { font-size: 40px; }
+  .page-head { padding: 16px 14px 14px; margin-bottom: 24px; }
+  .page-eyebrow { font-size: 9px; }
+  .grid-3 { grid-template-columns: 1fr; }
+  .grid-4 { grid-template-columns: 1fr 1fr; }
+  .stat-value { font-size: 38px; }
+  .card-value { font-size: 40px; }
+  .section-head { font-size: 9px; padding: 5px 10px; }
+  .btn { padding: 9px 14px; font-size: 9px; }
+  .input { font-size: 16px; } /* prevent iOS zoom */
+  select.input { font-size: 16px; }
+  .onboard-modal { max-height: 95vh; }
+  .onboard-title { font-size: 36px; }
+  .chat-input { font-size: 16px; }
 }

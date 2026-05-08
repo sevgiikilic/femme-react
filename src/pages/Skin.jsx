@@ -170,10 +170,36 @@ export default function Skin({ appState }) {
                           {phase.name}: {phaseNote}
                         </div>
                       )}
+                      {r.ingredients?.length > 0 && (
+                        <div className="search-result-ingredients">
+                          {r.ingredients.map(ing => <span key={ing} className="ingredient-chip">{ing}</span>)}
+                        </div>
+                      )}
                     </div>
                   );
                 })}
                 <div className="search-result-close" onMouseDown={() => setSearchResults([])}>kapat ×</div>
+              </div>
+            )}
+            {/* Ingredient + phase preview after picking */}
+            {pickedProduct && (pickedProduct.ingredients?.length > 0 || pickedProduct.phases) && (
+              <div className="picked-product-info">
+                {pickedProduct.phases && (
+                  <div className="phase-compat-row">
+                    {Object.entries(pickedProduct.phases).map(([ph, note]) => (
+                      <div key={ph} className={`phase-compat-cell ${note?.includes('kaçın') || note?.includes('dikkatli') ? 'compat-warn' : 'compat-ok'}`}>
+                        <span className="phase-compat-ph">{ph}</span>
+                        <span className="phase-compat-note">{note}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {pickedProduct.ingredients?.length > 0 && (
+                  <div className="ingredient-row">
+                    <span className="ingredient-row-label">Bileşenler:</span>
+                    {pickedProduct.ingredients.map(ing => <span key={ing} className="ingredient-chip">{ing}</span>)}
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -199,7 +225,14 @@ export default function Skin({ appState }) {
             <tbody>
               {state.products.map((p, i) => (
                 <tr key={i}>
-                  <td className="num-cell">{p.name}</td>
+                  <td className="num-cell">
+                    {p.name}
+                    {p.ingredients?.length > 0 && (
+                      <div className="ingredient-row-mini">
+                        {p.ingredients.map(ing => <span key={ing} className="ingredient-chip-mini">{ing}</span>)}
+                      </div>
+                    )}
+                  </td>
                   <td>{p.type}</td>
                   <td>{p.active || '—'}</td>
                   <td><button className="micro-btn danger" type="button" onClick={() => deleteProduct(i)}>Sil</button></td>

@@ -22,9 +22,9 @@ const NAV = [
   ]},
 ];
 
-export default function Sidebar({ page, onNavigate, user, onLogout, theme, onThemeChange }) {
+export default function Sidebar({ page, onNavigate, user, onLogout, theme, onThemeChange, isOpen }) {
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar${isOpen ? ' sidebar-open' : ''}`}>
       {/* brand */}
       <div className="brand">
         <div className="brand-stamp">FEMME</div>

@@ -5,12 +5,14 @@ import './Settings.css';
 
 const KEY = 'femme_v3';
 
-export default function Settings({ appState, onLogout }) {
+export default function Settings({ appState, onLogout, auth }) {
   const { state, update, save } = appState;
   const [aiUrl, setAiUrl] = useState(state.aiUrl || '');
   const [aiStatus, setAiStatus] = useState('');
   const [avgCycle, setAvgCycle] = useState(String(state.avgCycle || 28));
   const [avgPeriod, setAvgPeriod] = useState(String(state.avgPeriod || 5));
+  const [syncStatus, setSyncStatus] = useState('');
+  const [syncing, setSyncing] = useState(false);
 
   function saveAiUrl() {
     update({ aiUrl: aiUrl.trim() });
@@ -30,6 +32,48 @@ export default function Settings({ appState, onLogout }) {
 
   function saveDefaults() {
     update({ avgCycle: parseInt(avgCycle) || 28, avgPeriod: parseInt(avgPeriod) || 5 });
+  }
+
+  async function syncPush() {
+    if (!auth?.authFetch) return;
+    setSyncing(true); setSyncStatus('[ buluta yükleniyor... ]');
+    try {
+      const res = await auth.authFetch(WORKER_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ task: 'sync_push', data: state }),
+      });
+      const j = await res.json();
+      if (!res.ok) throw new Error(j.error || 'Hata');
+      setSyncStatus('[ ★ buluta yüklendi ]');
+    } catch (e) {
+      setSyncStatus(`[ × ${e.message} ]`);
+    } finally { setSyncing(false); }
+  }
+
+  async function syncPull() {
+    if (!auth?.authFetch) return;
+    setSyncing(true); setSyncStatus('[ buluttan çekiliyor... ]');
+    try {
+      const res = await auth.authFetch(WORKER_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ task: 'sync_pull' }),
+      });
+      const j = await res.json();
+      if (!res.ok) throw new Error(j.error || 'Hata');
+      if (j.data) {
+        if (!window.confirm('Buluttaki verilerle mevcut veriler değiştirilecek. Devam?')) {
+          setSyncStatus(''); setSyncing(false); return;
+        }
+        save(j.data);
+        setSyncStatus('[ ★ veriler güncellendi ]');
+      } else {
+        setSyncStatus('[ bulutta kayıtlı veri yok ]');
+      }
+    } catch (e) {
+      setSyncStatus(`[ × ${e.message} ]`);
+    } finally { setSyncing(false); }
   }
 
   function exportData() {
@@ -124,6 +168,40 @@ export default function Settings({ appState, onLogout }) {
           <button className="btn btn-primary" type="button" onClick={saveDefaults}>Kaydet</button>
         </div>
       </div>
+
+      {auth?.authFetch && (
+        <>
+          <div className="section-head mt-28">
+            Bulut Senkronizasyonu
+            <span style={{ marginLeft: 'auto', fontWeight: 400, opacity: 0.6 }}>Cihazlar arası</span>
+          </div>
+          <div className="card">
+            <div className="settings-row">
+              <div>
+                <div className="settings-title">Buluta Yükle</div>
+                <div className="settings-desc">Verilerini bu hesaba kaydet. Diğer cihazdan çekebilirsin.</div>
+              </div>
+              <button className="btn btn-sm btn-primary" type="button" onClick={syncPush} disabled={syncing}>
+                Yükle ↑
+              </button>
+            </div>
+            <div className="settings-row">
+              <div>
+                <div className="settings-title">Buluttan Çek</div>
+                <div className="settings-desc">Hesabında kayıtlı verileri bu cihaza yükle.</div>
+              </div>
+              <button className="btn btn-sm" type="button" onClick={syncPull} disabled={syncing}>
+                Çek ↓
+              </button>
+            </div>
+            {syncStatus && (
+              <div style={{ fontFamily: 'var(--f-mono)', fontSize: '10px', color: 'var(--crystal)', padding: '8px 0 4px', letterSpacing: '0.08em' }}>
+                {syncStatus}
+              </div>
+            )}
+          </div>
+        </>
+      )}
 
       <div className="section-head mt-28">
         Verilerim

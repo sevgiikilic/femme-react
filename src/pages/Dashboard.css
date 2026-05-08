@@ -1,3 +1,22 @@
+/* ── CYCLE MISSING BANNER ── */
+.cycle-missing-banner {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px 16px; margin-bottom: 16px;
+  background: var(--paper-2);
+  border: 2px solid var(--gold);
+  border-left: 5px solid var(--gold);
+  font-family: var(--f-mono); font-size: 10px;
+  color: var(--ink-soft); letter-spacing: 0.06em;
+}
+.cycle-missing-banner button {
+  background: none; border: 2px solid var(--gold); padding: 5px 12px;
+  font-family: var(--f-mono); font-size: 9px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.16em;
+  color: var(--gold); cursor: pointer; white-space: nowrap;
+  transition: background .12s;
+}
+.cycle-missing-banner button:hover { background: var(--gold); color: var(--ink); }
+
 /* ── TODAY STATE CARD ── */
 .today-state-card {
   display: grid;

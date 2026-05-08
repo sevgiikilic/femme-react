@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from './hooks/useAuth';
 import { useAppState } from './hooks/useAppState';
 import Login from './pages/Login';
@@ -22,8 +22,11 @@ import './App.css';
 export default function App() {
   const auth     = useAuth();
   const appState = useAppState();
-  const [page, setPage]   = useState('dashboard');
-  const [theme, setTheme] = useState(() => localStorage.getItem('femme_theme') || 'space');
+  const [page, setPage]       = useState('dashboard');
+  const [theme, setTheme]     = useState(() => localStorage.getItem('femme_theme') || 'space');
+  const [navOpen, setNavOpen] = useState(false);
+
+  const navigate = useCallback((p) => { setPage(p); setNavOpen(false); }, []);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -43,7 +46,7 @@ export default function App() {
     fitness:   <Fitness   appState={appState} />,
     insights:  <Insights  appState={appState} />,
     chat:      <Chat      appState={appState} />,
-    settings:  <Settings  appState={appState} onLogout={auth.logout} />,
+    settings:  <Settings  appState={appState} onLogout={auth.logout} auth={auth} />,
   };
 
   if (!auth.isLoggedIn) {
@@ -61,13 +64,23 @@ export default function App() {
       <div className="halftone" />
       <div className="stars" />
       <div className="app">
+        <button
+          className="nav-toggle"
+          type="button"
+          aria-label={navOpen ? 'Menüyü kapat' : 'Menüyü aç'}
+          onClick={() => setNavOpen(o => !o)}
+        >
+          {navOpen ? '✕' : '☰'}
+        </button>
+        {navOpen && <div className="nav-backdrop" onClick={() => setNavOpen(false)} />}
         <Sidebar
           page={page}
-          onNavigate={setPage}
+          onNavigate={navigate}
           user={auth.user}
           onLogout={auth.logout}
           theme={theme}
           onThemeChange={setTheme}
+          isOpen={navOpen}
         />
         <main className="main" key={page}>
           {PAGES[page] ?? PAGES.dashboard}
