@@ -3,39 +3,85 @@ import { cycleInfo, PHASES } from '../utils/cycle';
 import './Food.css';
 
 const CATS = ['İçecek','Süt Ürünü','Tahıl','Sebze','Meyve','Protein','Yağ & Tohum','Atıştırmalık','Diğer'];
-const PREF_LABELS = { love: 'A · Severim', neutral: '○ Nötr', skip: '× Tercih etmem', react: '! Tepki' };
-const PREF_ORDER  = ['love','skip','react','neutral'];
+const PREFS = ['love','skip','neutral'];
+const PREF_LABELS = { love: 'Severim', skip: 'Sevmiyorum', neutral: 'Nötr' };
+const PREF_ORDER  = ['love','skip','neutral'];
+
+const CAT_MAP = {
+  'Süt Ürünü': ['süt','peynir','yoğurt','kefir','tereyağ','krema','ayran','lor','labne','kaşar','mozzarella','parmesan'],
+  'Tahıl':     ['ekmek','makarna','pirinç','bulgur','yulaf','müsli','granola','bisküvi','kraker','tortilla','un'],
+  'Sebze':     ['brokoli','ıspanak','domates','salatalık','biber','soğan','sarımsak','havuç','patlıcan','kabak','bezelye','mısır','lahana','marul','roka','mantar','pancar','bamya'],
+  'Meyve':     ['elma','muz','portakal','çilek','üzüm','armut','kiraz','mandalina','kivi','kavun','karpuz','şeftali','mango','ananas','erik','incir','nar','böğürtlen','ahududu'],
+  'Protein':   ['tavuk','et','balık','somon','ton','yumurta','mercimek','nohut','fasulye','tofu','tempeh','soya','dana','kuzu','hindi','karides'],
+  'Yağ & Tohum': ['zeytinyağı','ceviz','badem','fındık','kaju','chia','keten','avokado','fıstık','susam','tahini'],
+  'İçecek':    ['çay','kahve','su','meyve suyu','smoothie','bitki','yeşil çay','kombucha','limonata'],
+  'Atıştırmalık': ['çikolata','dondurma','kek','kurabiye','pasta','tatlı','cips','gofret','şeker','lokum','baklava'],
+};
+
+function detectCategory(name) {
+  const n = name.toLowerCase();
+  for (const [cat, keys] of Object.entries(CAT_MAP)) {
+    if (keys.some(k => n.includes(k))) return cat;
+  }
+  return 'Diğer';
+}
 
 export default function Food({ appState }) {
   const { state, update } = appState;
-  const [name, setName] = useState('');
-  const [pref, setPref] = useState('neutral');
-  const [cat, setCat]   = useState('Diğer');
+  const [name, setName]           = useState('');
+  const [pref, setPref]           = useState('neutral');
+  const [cat, setCat]             = useState('Diğer');
+  const [catAuto, setCatAuto]     = useState(true);
+  const [hasReact, setHasReact]   = useState(false);
+  const [reactNote, setReactNote] = useState('');
 
   const info  = cycleInfo(state);
   const phase = info ? PHASES[info.phaseKey] : null;
 
-  const groups = { love: [], skip: [], react: [], neutral: [] };
-  state.foods.forEach(f => groups[f.pref || 'neutral'].push(f));
+  // group: 'react' legacy → treated as 'skip' visually
+  const groups = { love: [], skip: [], neutral: [] };
+  state.foods.forEach(f => {
+    const g = (f.pref === 'react') ? 'skip' : (f.pref || 'neutral');
+    if (groups[g]) groups[g].push(f);
+  });
+
+  function handleNameChange(val) {
+    setName(val);
+    if (catAuto) setCat(detectCategory(val) || 'Diğer');
+  }
 
   function addFood() {
     const n = name.trim();
     if (!n) return;
     if (state.foods.find(f => f.name.toLowerCase() === n.toLowerCase())) return;
-    update({ foods: [...state.foods, { name: n, pref, cat, issues: [] }] });
-    setName('');
+    const issues = (hasReact && reactNote.trim()) ? [reactNote.trim()] : [];
+    update({ foods: [...state.foods, { name: n, pref, cat, issues }] });
+    setName(''); setHasReact(false); setReactNote('');
+    if (catAuto) setCat('Diğer');
   }
 
   function setFoodPref(foodName, newPref) {
     update({ foods: state.foods.map(f => f.name === foodName ? { ...f, pref: newPref } : f) });
   }
 
+  function toggleReact(foodName) {
+    const food = state.foods.find(f => f.name === foodName);
+    if (!food) return;
+    if (food.issues?.length) {
+      update({ foods: state.foods.map(f => f.name === foodName ? { ...f, issues: [] } : f) });
+    } else {
+      const note = prompt('Tepki/semptom nedir? (ör. baş ağrısı, şişkinlik)');
+      if (!note) return;
+      update({ foods: state.foods.map(f => f.name === foodName ? { ...f, issues: [note.trim()] } : f) });
+    }
+  }
+
   function addIssue(foodName) {
-    const issue = prompt('Tepki/semptom ekle (ör. baş ağrısı):');
+    const issue = prompt('Tepki/semptom ekle:');
     if (!issue) return;
     update({
       foods: state.foods.map(f =>
-        f.name === foodName ? { ...f, pref: 'react', issues: [...(f.issues || []), issue.trim()] } : f
+        f.name === foodName ? { ...f, issues: [...(f.issues || []), issue.trim()] } : f
       ),
     });
   }
@@ -52,7 +98,7 @@ export default function Food({ appState }) {
     update({ foods: state.foods.filter(f => f.name !== foodName) });
   }
 
-  const groupLabels = { love: 'A · Sevdiklerim', skip: '× Tercih etmediklerim', react: '! Tepki verdiklerim', neutral: '○ Diğerleri' };
+  const groupLabels = { love: 'Severim', skip: 'Sevmiyorum', neutral: 'Nötr' };
 
   return (
     <div className="page-wrap">
@@ -66,35 +112,60 @@ export default function Food({ appState }) {
 
       <div className="card">
         <div className="card-label">Yiyecek / İçecek Ekle</div>
-        <div className="form-row">
-          <div className="form-group" style={{ flex: 2 }}>
-            <label className="form-label">Ad</label>
+        <div style={{ padding: '16px 20px 20px' }}>
+          <div className="form-row" style={{ alignItems: 'flex-start' }}>
+            <div className="form-group" style={{ flex: 2 }}>
+              <label className="form-label">Ad</label>
+              <input
+                type="text" className="input" value={name}
+                placeholder="ör. somon, koyu çikolata, papatya çayı"
+                onChange={e => handleNameChange(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && addFood()}
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Kategori {catAuto && <span style={{ color: 'var(--crystal)', fontSize: '8px' }}>OTO</span>}</label>
+              <select className="select" value={cat} onChange={e => { setCat(e.target.value); setCatAuto(false); }}>
+                {CATS.map(c => <option key={c}>{c}</option>)}
+              </select>
+            </div>
+          </div>
+
+          <div className="pref-row">
+            <span className="pref-row-label">Tercih:</span>
+            {PREFS.map(p => (
+              <button
+                key={p}
+                type="button"
+                className={`pref-btn pref-btn-${p}${pref === p ? ' active' : ''}`}
+                onClick={() => setPref(p)}
+              >
+                {PREF_LABELS[p]}
+              </button>
+            ))}
+            <label className="react-check">
+              <input type="checkbox" checked={hasReact} onChange={e => setHasReact(e.target.checked)} />
+              <span>Tepki var</span>
+            </label>
+          </div>
+
+          {hasReact && (
             <input
-              type="text" className="input" value={name}
-              placeholder="ör. somon, koyu çikolata, papatya çayı"
-              onChange={e => setName(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && addFood()}
+              type="text" className="input mt-8"
+              value={reactNote}
+              placeholder="ör. baş ağrısı, şişkinlik, kaşıntı..."
+              onChange={e => setReactNote(e.target.value)}
             />
-          </div>
-          <div className="form-group">
-            <label className="form-label">Tercih</label>
-            <select className="select" value={pref} onChange={e => setPref(e.target.value)}>
-              {Object.entries(PREF_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
-            </select>
-          </div>
-          <div className="form-group">
-            <label className="form-label">Kategori</label>
-            <select className="select" value={cat} onChange={e => setCat(e.target.value)}>
-              {CATS.map(c => <option key={c}>{c}</option>)}
-            </select>
-          </div>
-          <button className="btn btn-primary" type="button" onClick={addFood}>Ekle</button>
+          )}
+
+          <button className="btn btn-primary mt-12" type="button" onClick={addFood}>Ekle</button>
         </div>
       </div>
 
       {PREF_ORDER.map(key => (
         <div key={key}>
           <div className="section-head mt-28">
+            <span className={`pref-dot pref-dot-${key}`} />
             {groupLabels[key]}
             <span style={{ marginLeft: 'auto', fontWeight: 400, opacity: 0.6 }}>{groups[key].length}</span>
           </div>
@@ -103,16 +174,21 @@ export default function Food({ appState }) {
               <div className="empty-msg">Henüz yok.</div>
             ) : groups[key].map(f => (
               <div key={f.name} className="food-item">
-                <div className={`food-pref food-pref-${f.pref || 'neutral'}`}>
-                  {f.pref === 'love' ? 'A' : f.pref === 'skip' ? '×' : f.pref === 'react' ? '!' : '○'}
+                <div className={`food-pref food-pref-${(f.pref === 'react' ? 'skip' : f.pref) || 'neutral'}`}>
+                  {f.pref === 'love' ? '♡' : f.pref === 'skip' || f.pref === 'react' ? '×' : '○'}
                 </div>
                 <div className="food-info">
-                  <div className="food-name">{f.name}</div>
+                  <div className="food-name">
+                    {f.name}
+                    {f.issues?.length > 0 && (
+                      <span className="react-badge" title={f.issues.join(', ')}>! tepki</span>
+                    )}
+                  </div>
                   <div className="food-meta">
                     {f.cat}
-                    {f.issues && f.issues.length > 0 && (
+                    {f.issues?.length > 0 && (
                       <> · {f.issues.map((iss, i) => (
-                        <span key={i} className="issue-tag" onClick={() => removeIssue(f.name, i)} title="kaldır">
+                        <span key={i} className="issue-tag" onClick={() => removeIssue(f.name, i)} title="kaldırmak için tıkla">
                           {iss}
                         </span>
                       ))}</>
@@ -120,14 +196,20 @@ export default function Food({ appState }) {
                   </div>
                 </div>
                 <div className="food-actions">
-                  <select
-                    className="select select-sm"
-                    value={f.pref || 'neutral'}
-                    onChange={e => setFoodPref(f.name, e.target.value)}
-                  >
-                    {Object.entries(PREF_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
-                  </select>
-                  <button className="micro-btn" type="button" onClick={() => addIssue(f.name)}>+ Tepki</button>
+                  <div className="pref-mini-row">
+                    {PREFS.map(p => (
+                      <button
+                        key={p}
+                        type="button"
+                        className={`pref-mini pref-mini-${p}${(f.pref === p || (f.pref === 'react' && p === 'skip')) ? ' active' : ''}`}
+                        onClick={() => setFoodPref(f.name, p)}
+                        title={PREF_LABELS[p]}
+                      >
+                        {p === 'love' ? '♡' : p === 'skip' ? '×' : '○'}
+                      </button>
+                    ))}
+                  </div>
+                  <button className="micro-btn" type="button" onClick={() => addIssue(f.name)} title="Tepki ekle">+!</button>
                   <button className="micro-btn danger" type="button" onClick={() => deleteFood(f.name)}>Sil</button>
                 </div>
               </div>
@@ -157,11 +239,11 @@ export default function Food({ appState }) {
                 {(phase.foodBad || []).map((t, i) => (
                   <div key={i} className="rec-item"><span className="rec-icon" style={{ color: 'var(--jazz-red)' }}>−</span>{t}</div>
                 ))}
-                {groups.react.map(f => (
+                {state.foods.filter(f => f.issues?.length).map(f => (
                   <div key={f.name} className="rec-item">
                     <span className="rec-icon" style={{ color: 'var(--jazz-orange)' }}>!</span>
                     {f.name}
-                    {f.issues && f.issues.length > 0 && <span style={{ color: 'var(--ink-faint)', fontSize: '11px' }}> · {f.issues.join(', ')}</span>}
+                    <span style={{ color: 'var(--ink-faint)', fontSize: '11px' }}> · {f.issues.join(', ')}</span>
                   </div>
                 ))}
               </div>

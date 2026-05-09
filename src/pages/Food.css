@@ -17,7 +17,6 @@
 }
 .food-pref-love    { background: var(--accent); color: var(--paper); }
 .food-pref-skip    { background: var(--ink); color: var(--paper); }
-.food-pref-react   { background: var(--jazz-orange); color: var(--paper); }
 .food-pref-neutral { background: var(--paper-2); color: var(--ink-faint); }
 
 .food-name { font-family: var(--f-body); font-size: 14px; color: var(--ink); font-weight: 500; }
@@ -37,13 +36,75 @@
 .issue-tag:hover { background: var(--jazz-orange); color: var(--paper); }
 
 .food-actions {
-  display: flex; align-items: center; gap: 6px; flex-shrink: 0;
+  display: flex; align-items: center; gap: 6px; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end;
 }
-.select-sm {
-  font-size: 10px; padding: 4px 20px 4px 6px; width: auto;
-  border: 1px solid var(--ink); background: var(--paper);
-  color: var(--ink); font-family: var(--f-mono);
+
+/* pref buttons in add form */
+.pref-row {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  margin-top: 14px;
 }
+.pref-row-label {
+  font-family: var(--f-mono); font-size: 9px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.18em; color: var(--ink-faint);
+}
+.pref-btn {
+  font-family: var(--f-mono); font-size: 9px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.14em;
+  padding: 5px 12px; border: 2px solid var(--line);
+  background: transparent; color: var(--ink-soft); cursor: pointer;
+  transition: all .1s;
+}
+.pref-btn:hover { border-color: var(--ink); color: var(--ink); }
+.pref-btn-love.active  { background: var(--accent); border-color: var(--ink); color: var(--paper); }
+.pref-btn-skip.active  { background: var(--ink);    border-color: var(--ink); color: var(--paper); }
+.pref-btn-neutral.active { background: var(--paper-2); border-color: var(--ink); color: var(--ink); }
+[data-theme="space"] .pref-btn-love.active,
+[data-theme="space"] .pref-btn-skip.active { color: #fff; }
+
+.react-check {
+  display: flex; align-items: center; gap: 5px;
+  font-family: var(--f-mono); font-size: 9px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.14em;
+  color: var(--jazz-orange); cursor: pointer;
+  padding: 5px 10px; border: 2px solid var(--jazz-orange);
+  background: transparent; user-select: none;
+}
+.react-check input { width: 12px; height: 12px; accent-color: var(--jazz-orange); }
+
+/* reaction badge on food item */
+.react-badge {
+  display: inline-block;
+  font-family: var(--f-mono); font-size: 8px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  background: var(--jazz-orange); color: var(--paper);
+  padding: 1px 5px; margin-left: 6px;
+}
+
+/* pref section header dot */
+.pref-dot {
+  display: inline-block; width: 8px; height: 8px;
+  border: 2px solid currentColor; flex-shrink: 0;
+}
+.pref-dot-love    { background: var(--accent); border-color: var(--accent); }
+.pref-dot-skip    { background: var(--ink-soft); border-color: var(--ink-soft); }
+.pref-dot-neutral { background: transparent; border-color: var(--ink-faint); }
+
+/* mini pref toggle buttons on each food item */
+.pref-mini-row { display: flex; gap: 3px; }
+.pref-mini {
+  width: 26px; height: 26px;
+  font-size: 13px; line-height: 1;
+  border: 1.5px solid var(--line); background: transparent;
+  color: var(--ink-faint); cursor: pointer; transition: all .1s;
+  display: flex; align-items: center; justify-content: center;
+}
+.pref-mini:hover { border-color: var(--ink); color: var(--ink); }
+.pref-mini-love.active  { background: var(--accent); border-color: var(--ink); color: var(--paper); }
+.pref-mini-skip.active  { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.pref-mini-neutral.active { background: var(--paper-2); border-color: var(--ink); color: var(--ink); }
+[data-theme="space"] .pref-mini-love.active,
+[data-theme="space"] .pref-mini-skip.active { color: #fff; }
 
 .rec-item {
   display: flex; align-items: flex-start; gap: 8px;

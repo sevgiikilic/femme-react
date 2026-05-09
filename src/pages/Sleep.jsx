@@ -91,11 +91,11 @@ export default function Sleep({ appState }) {
               <input type="date" className="input" value={date} onChange={e => setBed_date(e.target.value)} />
             </div>
             <div className="form-group">
-              <label className="form-label">Yattım</label>
+              <label className="form-label">Uyudum</label>
               <input type="time" className="input" value={bedtime} onChange={e => setBedtime(e.target.value)} />
             </div>
             <div className="form-group">
-              <label className="form-label">Kalktım</label>
+              <label className="form-label">Uyandım</label>
               <input type="time" className="input" value={wakeTime} onChange={e => setWakeTime(e.target.value)} />
             </div>
             <div className="form-group">
@@ -159,7 +159,7 @@ export default function Sleep({ appState }) {
       <div className="card table-card">
         <table className="data-table">
           <thead>
-            <tr><th>Tarih</th><th>Faz</th><th>Yattım</th><th>Kalktım</th><th>Süre</th><th>Kalite</th><th>Not</th></tr>
+            <tr><th>Tarih</th><th>Faz</th><th>Uyudum</th><th>Uyandım</th><th>Süre</th><th>Kalite</th><th>Not</th></tr>
           </thead>
           <tbody>
             {sorted.length === 0 ? (

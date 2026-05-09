@@ -4,7 +4,7 @@ import { aiCall, buildContext, WORKER_URL, getEffectiveUrl } from '../hooks/useA
 import './Chat.css';
 
 // Keywords that suggest a health log message (not a question)
-const LOG_RE = /kilo(?:m(?:u)?)?|kg|şişkinlik|şiştim|şiş(?:im|tik)|uyku(?:m(?:u)?)?|uyudum|yattım|kalktım|ruh hal(?:im|i)?|enerjim|enerji(?:m)?|kramp|baş ağrı|vitamin|takviye|magnezyum|omega|b12|demir|çinko|probiyotik|aldım|yedim|içtim|sürdüm|sabah|öğle|akşam|kahvaltı|moralim|yorgu(?:n(?:um)?|yum)/i;
+const LOG_RE = /kilo(?:m(?:u)?)?|kg|şişkinlik|şiştim|şiş(?:im|tik)|uyku(?:m(?:u)?)?|uyudum|yattım|kalktım|uyand[iı]m|ruh hal(?:im|i)?|enerjim|enerji(?:m)?|kramp|baş ağrı|vitamin|takviye|magnezyum|omega|b12|demir|çinko|probiyotik|aldım|yedim|içtim|sürdüm|sabah|öğle|akşam|kahvaltı|moralim|yorgu(?:n(?:um)?|yum)|dolabıma ekle|dolaba ekle|ürün ekle|ekler misin|ekleyebilir misin|cilt.*ekle|serum.*ekle|krem.*ekle/i;
 
 function applyLogToState(log, state, update, todayDate) {
   if (log.error) return [];
@@ -85,6 +85,23 @@ function applyLogToState(log, state, update, todayDate) {
     });
     patch.supplements = newSups;
     saved.push(`takviye: ${log.supplements.map(s => s.name).join(', ')}`);
+  }
+
+  // products_to_add → products cabinet
+  if (log.products_to_add?.length) {
+    const existing = patch.products || state.products || [];
+    const newProds = [...existing];
+    const added = [];
+    log.products_to_add.forEach(p => {
+      if (!newProds.find(e => e.name.toLowerCase() === p.name.toLowerCase())) {
+        newProds.push({ name: p.name, type: p.type || 'Serum', active: '', phases: null, ingredients: [] });
+        added.push(p.name);
+      }
+    });
+    if (added.length) {
+      patch.products = newProds;
+      saved.push(`ürün dolabı: ${added.join(', ')}`);
+    }
   }
 
   if (Object.keys(patch).length) update(patch);

@@ -1,4 +1,27 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" fill="#0a0613"/>
-  <text x="256" y="360" font-family="serif" font-size="340" font-weight="900" fill="#ff2e4d" text-anchor="middle" dominant-baseline="auto">F</text>
+  <defs>
+    <radialGradient id="bg" cx="40%" cy="30%" r="90%">
+      <stop offset="0%" stop-color="#4a1d7a"/>
+      <stop offset="55%" stop-color="#2a1050"/>
+      <stop offset="100%" stop-color="#100828"/>
+    </radialGradient>
+    <mask id="moon">
+      <rect width="512" height="512" fill="black"/>
+      <circle cx="234" cy="234" r="120" fill="white"/>
+      <circle cx="286" cy="190" r="106" fill="black"/>
+    </mask>
+  </defs>
+
+  <!-- Full background fill (maskable safe zone: inner 40%) -->
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <circle cx="234" cy="234" r="145" fill="#ff8fc4" opacity="0.07"/>
+  <circle cx="234" cy="234" r="120" fill="#ffd23f" mask="url(#moon)"/>
+
+  <!-- Stars within safe zone -->
+  <path d="M380 100 L383 110 L393 114 L383 118 L380 128 L377 118 L367 114 L377 110 Z" fill="#ff8fc4" opacity="0.9"/>
+  <path d="M130 150 L133 158 L141 161 L133 164 L130 172 L127 164 L119 161 L127 158 Z" fill="#ffd23f" opacity="0.85"/>
+
+  <circle cx="100" cy="330" r="4" fill="#88f4e8" opacity="0.7"/>
+  <circle cx="390" cy="180" r="3.5" fill="#ffd23f" opacity="0.65"/>
+  <circle cx="380" cy="340" r="3" fill="#c89aff" opacity="0.65"/>
 </svg>

@@ -135,9 +135,9 @@ export default function Skin({ appState }) {
         Cilt bakım dolabım
         <span style={{ marginLeft: 'auto', fontWeight: 400, opacity: 0.6 }}>{state.products.length} ürün</span>
       </div>
-      <div className="card">
-        <div className="form-row">
-          <div className="form-group" style={{ flex: 2, position: 'relative' }} ref={searchRef}>
+      <div className="card" style={{ overflow: 'visible' }}>
+        <div className="form-row" style={{ overflow: 'visible' }}>
+          <div className="form-group" style={{ flex: 2, position: 'relative', zIndex: 10 }} ref={searchRef}>
             <label className="form-label">Ürün Adı · AI ile aratılır</label>
             <div style={{ display: 'flex', gap: '8px' }}>
               <input
